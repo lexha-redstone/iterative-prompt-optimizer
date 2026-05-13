@@ -1,15 +1,13 @@
-Generate a strict 30-degree isometric pixel art infographic visually representing this input: "&USER_INPUT&". 
+Generate a strict 1-bit style isometric pixel art infographic visually representing this input: "&USER_INPUT&"
 
-Follow these absolute aesthetic and structural mandates:
+**1. Typography & Uniform Pixel Medium (CRITICAL):** 
+You MUST render ALL text—including titles, headers, subtitles, and body copy—as chunky, low-resolution, jagged, perfectly aliased pixel-art fonts. Synthesize the exact spelling entirely out of uniform pixel blocks that perfectly match the grid of the background structures. Absolutely NO smooth fonts, high-resolution rendering, anti-aliasing, or modern vector text layered over the image. 
 
-1. MANDATORY BITMAP TYPOGRAPHY (NO MIXELS): All text, including headers, labels, and body copy, MUST be rendered as chunky, jagged, retro bitmap lettering constructed from individual, visible pixels. The typography must share the EXACT SAME global pixel grid, uniform block size, and resolution as the 3D environment. Smooth, high-resolution, anti-aliased, or vector overlays are strictly forbidden. 
+**2. Layout & Strict Negative Space:** 
+Construct a "Modular Island Layout". Place data categories onto discrete, physically disconnected 3D isometric platforms. You MUST separate these platforms with vast expanses of pure, empty negative space. Do not clutter the background. NEVER duplicate the input text to fill space, and NEVER generate recognizable hallucinated gibberish text on background props; use abstract pixel lines ("greeking") for unprompted minor details.
 
-2. EXACT TRANSCRIPTION & ZERO DUPLICATION: Transcribe the user input EXACTLY ONCE. Do not duplicate text blocks to fill space. Keep all contextual props (whiteboards, computer screens, documents) completely blank or represented by simple, abstract solid-color pixel blocks. Do not hallucinate filler text, gibberish, or secondary labels.
+**3. Spatial Logic & The HUD Exemption:** 
+Maintain immaculate 30-degree isometric projection for all architectural structures and props. Flat 2D elements (such as legends, titles, or UI panels) are ONLY permitted as HUD overlays floating entirely outside, above, or away from the 3D geometry. You are strictly forbidden from pasting, painting, or embedding flat 2D orthographic assets or text directly onto 3D isometric planes. 
 
-3. UNIVERSAL ISOMETRIC PROJECTION: Every single structural element, object, prop, screen, and sign resting within the environment MUST perfectly conform to the 30-degree isometric grid. Never place flat, front-facing 2D orthographic elements on 3D isometric planes.
-
-4. MODULAR ISLAND LAYOUT & NEGATIVE SPACE: Place data categories on distinct, physically offset 3D isometric platforms. Maintain a minimalist composition by surrounding these modular islands with vast, pure negative space. Do not generate background clutter, tangled spaghetti pathways, or unnecessary filler assets in the empty space.
-
-5. HUD EXEMPTION: Flat 2D elements (such as top title banners or floating legends) are only permitted if they act as a HUD overlay floating entirely outside and away from the 3D isometric geometry. 
-
-6. UNIFORM LIGHTING: Apply strict 3-tone flat lighting to all 3D structures (Top=Highlight, Side 1=Midtone, Side 2=Core Shadow) using crisp, 100% aliased edges. Do not use modern UI drop-shadows, digital glows, gradients, or ambient occlusion.
+**4. Lighting & Shading:** 
+Apply strict, flat 3-tone volumetric shading to all 3D structures (Top = Highlight, Side 1 = Midtone, Side 2 = Core Shadow). Use 100% uniform pixel scaling and crisp aliasing throughout the entire canvas. Absolutely no modern drop-shadows, glowing digital effects, faux-ambient occlusion, blurry gradients, or global noise filters.

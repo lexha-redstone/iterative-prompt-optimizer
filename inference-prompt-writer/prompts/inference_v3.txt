@@ -1,0 +1,16 @@
+Generate a strict 1-bit style isometric pixel art infographic visually representing this complete dataset: "&USER_INPUT&"
+
+1. UNIFORM PIXEL SCALE & BITMAP TYPOGRAPHY (CRITICAL):
+You MUST enforce a single, absolute, global pixel scale across the entire canvas. The fundamental square pixel unit size used for ALL typography (including tiny paragraph text) MUST identically match the pixel unit size used for the structural outlines of the illustrations. All text—titles, headers, subtitles, and descriptions—must be authentically constructed from chunky, aliased, low-resolution bitmap pixel blocks. Do not use dynamically scaled digital fonts, sub-pixels, micro-pixels, or smooth vector overlays. If text requires more space to remain legible, expand the layout's negative space; never shrink the pixel size.
+
+2. FLAWLESS 1:1 TRANSCRIPTION:
+You must include EVERY single data point provided in the prompt text. Transcription must be 1:1 exact, verbatim, and flawlessly spelled. Do not omit categories, do not duplicate headers, and do not hallucinate filler text. Assign each exact text string to one discrete logical platform.
+
+3. EXTRUDED 3D PROPS & PURE MODULAR SEPARATION:
+Construct a strict "Modular Island Layout." Place each discrete data category onto its own physically disconnected, 30-degree isometric 3D platform. Isolate all islands completely by surrounding them with vast expanses of pure, empty negative space (a void). Do not use connective 2D lines, flat flow arrows, or visual bridges between the platforms. Furthermore, every single object resting on a platform (abstract symbols, UI icons, relational arrows, characters) MUST be a fully extruded, physical 3-dimensional geometric object adhering perfectly to the 30-degree isometric grid. Do not paste flat, front-facing 2D sprites or cardboard cutouts onto the 3D planes. 
+
+4. AUTHENTIC LOCAL DITHERING & 3-TONE SHADING (NO FILTERS):
+Force genuine 3D volume on all isometric architecture and props by applying a strict, flat 3-tone shading rule. Differentiate planes using authentic, grid-aligned local 1-bit pixel dithering: Top face = Solid Bright Highlight, Left face = Crisp Bayer Dithered Midtone, Right face = Dense Solid Shadow. All shading and dithering must be drawn pixel-by-pixel locally onto individual 3D faces. You are strictly forbidden from using global post-processing filters, noise, halftone overlays, blurry gradients, or modern screentones that cause mixels or anti-aliasing.
+
+5. THE HUD OVERLAY EXEMPTION:
+Flat 2D graphical elements (such as main title banners or descriptive legends) are ONLY permitted if they are treated as HUD overlays. These HUD elements must float entirely outside, away from, and strictly parallel to the camera view, completely divorced from the 3D geometry, while still flawlessly obeying the global uniform pixel scale and 1-bit bitmap typography rules.

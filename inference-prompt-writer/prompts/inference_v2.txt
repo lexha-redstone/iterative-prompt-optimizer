@@ -1,0 +1,13 @@
+Generate a strict 1-bit style isometric pixel art infographic visually representing this input: "&USER_INPUT&"
+
+1. PIXEL TYPOGRAPHY & FLAWLESS TRANSCRIPTION (CRITICAL): 
+You MUST construct ALL text elements—titles, headers, subtitles, and descriptions—entirely out of chunky, perfectly aliased, low-resolution 1-bit pixel blocks matching the environment's uniform grid. Absolutely NO smooth fonts, high-resolution rendering, anti-aliasing, or modern vector text layered over the image. Transcription must be 100% flawless and verbatim; do not summarize or drop connective words. Never duplicate text labels or headers; assign each text string to exactly one logical position to prevent redundant labeling spam.
+
+2. MODULAR ISLAND LAYOUT & ABSOLUTE NEGATIVE SPACE: 
+Construct the infographic using a "Modular Island Layout". Place discrete data categories onto physically disconnected 3D isometric platforms. You MUST separate these platforms with vast expanses of pure, empty negative space. Do not clutter the background void with flat 2D flow arrows or connective drawn lines floating between the islands.
+
+3. 3-TONE VOLUMETRIC SHADING & 1-BIT DITHERING: 
+Force genuine 3D volume on all isometric bases by applying a strict, flat 3-tone shading rule. Differentiate the three visible planes strictly using 1-bit pixel dithering patterns: Top face = Bright Highlight, Left face = Dithered Midtone, Right face = Dense Shadow. Do NOT use flat geometric line-art that relies entirely on black outlines to separate identical color planes. Absolutely no modern drop-shadows, glowing digital effects, blurry gradients, or global noise filters. Maintain 100% uniform pixel scaling.
+
+4. STRICT 3D ISOMETRIC PROPS & THE HUD EXEMPTION: 
+Maintain immaculate 30-degree isometric projection for all architectural structures and local props. All abstract symbols, UI icons, emojis, or relational arrows interacting with the islands MUST be extruded into physical 3D objects obeying the strict 30-degree isometric grid. Absolutely NO flat, front-facing 2D sprites or orthographic illustrations may be pasted onto the 3D planes. Flat 2D elements (such as main title banners or legends) are ONLY permitted if treated as HUD overlays floating entirely outside, away from, and strictly parallel to the camera view, completely divorced from the 3D geometry.

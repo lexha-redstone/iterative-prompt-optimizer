@@ -130,7 +130,10 @@ def parse_eval_results(eval_file, create_file):
 
         # --- DYNAMIC SCORE RECALCULATION (Arithmetic Mean of all found scores) ---
         scores = {}
-        eval_dict = eval_json.get("evaluation", eval_json.get("scores", {}))
+        # Try to find a nested dictionary first, fallback to the top-level object
+        eval_dict = eval_json.get("evaluation", eval_json.get("scores"))
+        if eval_dict is None or not isinstance(eval_dict, dict):
+            eval_dict = eval_json
         
         numeric_scores = []
         # Support both {"c1_score": 5.0} and {"c1": {"score": 5.0}}
@@ -139,7 +142,10 @@ def parse_eval_results(eval_file, create_file):
             if isinstance(v, dict) and "score" in v:
                 score_val = v["score"]
             elif isinstance(v, (int, float)):
-                score_val = v
+                # Exclude keys that are likely not category scores if they don't contain 'score' or 'C\d'
+                # but in a flat structure like v7-judge, we have C1_score, C2_score etc.
+                if "score" in k.lower() or any(c in k for c in ["C1", "C2", "C3", "C4", "C5"]):
+                    score_val = v
             
             if score_val is not None:
                 try:
