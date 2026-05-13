@@ -26,13 +26,17 @@ The **Inference Prompt Writer** is designed to refine **Inference Prompts** once
 - **Location**: `inference-prompt-writer/`
 - **Method**: Given an evaluation prompt, it generates outputs using the current inference prompt, evaluates them, and then uses a critic to suggest improvements for the next version of the prompt.
 - **Workflow**:
-  1. **Batch Inference**: Generate responses using the current inference prompt.
-  2. **Batch Evaluate**: Use the judge to score the generated responses.
-  3. **Critic**: Identify weaknesses in the responses based on the evaluation scores.
-  4. **Optimize**: Update the inference prompt to address the identified weaknesses.
+  1. **Initiate**: Bootstrap the initial inference prompt (`v0`), critic, and optimizer prompts based on a provided judge and golden standard images.
+  2. **Batch Inference**: Generate responses using the current inference prompt.
+  3. **Batch Evaluate**: Use the judge to score the generated responses.
+  4. **Critic**: Identify weaknesses in the responses based on the evaluation scores.
+  5. **Optimize**: Update the inference prompt to address the identified weaknesses.
 - **Example Usage**:
   ```bash
   cd inference-prompt-writer
+  # Step 0: Initial setup (Generate v0 prompts)
+  python 0_initiate.py
+  # Start iterative optimization
   python run_iterations.py --start_version v0 --num_iterations 10
   ```
 
