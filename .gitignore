@@ -1,0 +1,7 @@
+*.ipynb
+todos.md
+contrastive-eval-prompt-writer/results
+contrastive-eval-prompt-writer/logs/batch_jobs.log
+contrastive-eval-prompt-writer/logs/run_contrastive_v*.log
+contrastive-eval-prompt-writer/logs/meta_prompt_logs.txt
+contrastive-eval-prompt-writer/eval_prompts/archive
