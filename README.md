@@ -2,6 +2,15 @@
 
 This repository provides tools for iteratively optimizing LLM prompts. It consists of two main components: one for creating robust evaluation (judge) prompts and another for refining inference prompts based on those evaluation criteria.
 
+## WHY USE THIS
+
+Prompt engineering is often an intuitive but unstructured process. This repository provides a systematic, data-driven framework to optimize your prompts:
+
+*   **Refining Evaluation Prompts**: Creating high-quality evaluation (judge) prompts is difficult, and verifying their performance is even harder. The **Contrastive Eval Prompt Writer** automates this by analyzing "good" vs. "poor" samples, ensuring your judge can accurately distinguish quality.
+*   **Aligning Inference to Evaluation**: Once a judge is established, the **Inference Prompt Writer** iteratively improves your production prompts. It uses numerical scoring and a "Critic-Optimize" loop to align generated outputs with your specific evaluation criteria.
+*   **Extracting Generalizable Knowledge**: Instead of just tweaking words, the **Critic** component extracts structured insights and generalizable knowledge from performance data to provide more meaningful updates.
+*   **Learning from Success**: The optimization process identifies and leverages the best-performing samples to steer the prompt toward high-quality results.
+
 ## Features
 
 ### 1. Contrastive Eval Prompt Writer

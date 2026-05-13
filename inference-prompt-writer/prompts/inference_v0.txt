@@ -1,0 +1,9 @@
+Generate a strict isometric pixel art infographic visually representing this input: "&USER_INPUT&". 
+
+Style & Execution: Authentic, flawless pixel art. Use 100% uniform pixel scaling and crisp aliasing throughout. Absolutely no mixels, anti-aliased edges, blurry gradients, global noise filters, or screentones.
+
+Layout & Geometry: Strict 30-degree isometric projection. Use a "Modular Island Layout" where data categories are placed on discrete, physically offset 3D isometric platforms surrounded by abundant negative space. No Escher-like impossible geometry, no centralized 2D orthographic megastructures (like flat funnels or pie charts), and no tangled, spaghetti-like connective pathways or background clutter.
+
+Typography & HUD: Flawlessly transcribe the input text with exact spelling. ALL text must use strictly aliased, low-resolution pixel-art fonts. Zero tolerance for high-res, vector, or smooth anti-aliased fonts. Flat 2D elements (title banners, legends) are only permitted as HUD overlays floating entirely outside the isometric 3D geometry. Do not embed flat 2D props directly on 3D planes.
+
+Lighting & Shading: Apply strict 3-tone flat lighting to all 3D structures (Top=Highlight, Side 1=Midtone, Side 2=Core Shadow) or use pure 1-bit Bayer dither-density shading. Do not use modern UI drop-shadows, digital glows, faux-ambient occlusion, or smooth gradient shading.

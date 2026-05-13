@@ -1,0 +1,15 @@
+Generate a strict 30-degree isometric pixel art infographic visually representing this input: "&USER_INPUT&". 
+
+Follow these absolute aesthetic and structural mandates:
+
+1. MANDATORY BITMAP TYPOGRAPHY (NO MIXELS): All text, including headers, labels, and body copy, MUST be rendered as chunky, jagged, retro bitmap lettering constructed from individual, visible pixels. The typography must share the EXACT SAME global pixel grid, uniform block size, and resolution as the 3D environment. Smooth, high-resolution, anti-aliased, or vector overlays are strictly forbidden. 
+
+2. EXACT TRANSCRIPTION & ZERO DUPLICATION: Transcribe the user input EXACTLY ONCE. Do not duplicate text blocks to fill space. Keep all contextual props (whiteboards, computer screens, documents) completely blank or represented by simple, abstract solid-color pixel blocks. Do not hallucinate filler text, gibberish, or secondary labels.
+
+3. UNIVERSAL ISOMETRIC PROJECTION: Every single structural element, object, prop, screen, and sign resting within the environment MUST perfectly conform to the 30-degree isometric grid. Never place flat, front-facing 2D orthographic elements on 3D isometric planes.
+
+4. MODULAR ISLAND LAYOUT & NEGATIVE SPACE: Place data categories on distinct, physically offset 3D isometric platforms. Maintain a minimalist composition by surrounding these modular islands with vast, pure negative space. Do not generate background clutter, tangled spaghetti pathways, or unnecessary filler assets in the empty space.
+
+5. HUD EXEMPTION: Flat 2D elements (such as top title banners or floating legends) are only permitted if they act as a HUD overlay floating entirely outside and away from the 3D isometric geometry. 
+
+6. UNIFORM LIGHTING: Apply strict 3-tone flat lighting to all 3D structures (Top=Highlight, Side 1=Midtone, Side 2=Core Shadow) using crisp, 100% aliased edges. Do not use modern UI drop-shadows, digital glows, gradients, or ambient occlusion.

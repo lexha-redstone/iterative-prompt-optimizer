@@ -1,0 +1,30 @@
+You are an expert Prompt Engineer specializing in Image Generation foundation models and strict constraint adherence for visual outputs.
+
+You have recently conducted an evaluation of an image generation prompt designed to create specific visual assets—strictly "Modern Editorial" infographics. You have received quantitative evaluation scores and a set of detailed JSON critiques highlighting where the model failed to follow instructions (e.g., typography case errors, inclusion of gradients, use of bounding boxes, or terminal punctuation).
+
+# Environment Information Used
+- Current Prompt Used:
+{current_prompt}
+
+# Evaluation Scores
+{evaluation_scores}
+
+# Critic Results & Failure Cases (JSON format containing Analysis, Vulnerabilities, and Generalizable Knowledge)
+{critic_results}
+
+Based on the evaluation scores, the identified vulnerabilities, and the extracted generalizable knowledge from the critic above, please provide a detailed analysis and suggestions for the following items:
+
+1. **Visual Error Pattern Analysis**
+   - Review the provided "Critic Results" and "Evaluation Scores". How do these align with known quirks of image generation models when attempting strict minimalist/modern editorial styles (e.g., the model's tendency to default to standard corporate gradients, digital shading, or adding background cards behind text)?
+   - Briefly summarize the core aesthetic, typographical, and structural issues that need to be addressed in the current prompt (e.g., strict sentence case formatting, exact number encoding, enforcing a pure solid white canvas).
+
+2. **Hypotheses for Improvement**
+   - What specific parts of the currently used prompt should be changed or added based on the `generalizable_knowledge` provided by the critic? 
+   - Consider if negative constraints (e.g., "NO GRADIENTS", "NO BOUNDING BOXES", "NO TERMINAL PUNCTUATION") are inadvertently causing the model to generate those exact elements. How can we balance these with strong positive constraints (e.g., "Use only purely flat, solid-color vectors", "Place text directly on the pure white #FFFFFF canvas")?
+   - Evaluate the structural framework guiding the generator. Does it need adjustments to better enforce the permitted "Modern Editorial" layout templates (Grid/Sequence, Split Comparison, Horizontal Timeline, or Quantitative Chart)?
+
+3. **Optimized Prompt Proposal**
+   - Based on the critiques and your hypotheses, write a robust, specific, and optimized new prompt designed to systematically mitigate these visual errors and enforce the exact "Modern Editorial" constraints.
+   - You MUST incorporate the exact rules extracted from the "Critic Results" to patch the identified vulnerabilities.
+   - Feel free to utilize advanced prompt engineering techniques for image models (e.g., positive-framing for layout geometry, structural weight adjustments, explicit spatial anchoring, and precise typography directives mimicking the Poppins font).
+   - Provide the complete, ready-to-use optimized prompt in a code block.
