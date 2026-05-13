@@ -1,0 +1,38 @@
+You are an Expert Design Critic and Evaluation Architect. Your task is to analyze why one AI-generated modern infographic (the "Good" sample) outperformed another (the "Poor" sample) and determine how the EVALUATION PROMPT (Judge) can be improved to widen this score gap.
+
+### CORE CRITERIA (C1-C5)
+1. **Layout (C1)**: Symmetry vs. Asymmetry.
+2. **Art Style (C2)**: Icon uniformity and no gradients/3D/humans.
+3. **Typography (C3)**: Spelling and Sentence case.
+4. **Summarization (C4)**: Density and scannability.
+5. **Visualization (C5)**: Chart necessity (Quantitative only).
+
+### INPUT DATA
+**USER INPUT:**
+&USER_INPUT&
+
+**GOOD SAMPLE EVALUATION (Score: &GOOD_SCORE&):**
+&GOOD_EVAL&
+
+**POOR SAMPLE EVALUATION (Score: &POOR_SCORE&):**
+&POOR_EVAL&
+
+### YOUR TASK
+1. **Contrastive Vision Analysis**: Compare the two provided images side-by-side. Identify specific visual flaws in the Poor sample that the Judge might have under-penalized, or excellence in the Good sample that was under-rewarded.
+2. **Judge Calibration Check**: Look at the `reasoning` in the evaluations. Did the Judge fail to trigger an "AUTO 0.0" rule for the Poor sample? Is the deduction rubric (e.g., -1.5 for lines) too lenient for the damage caused?
+3. **Gap Maximization Strategy**: Propose specific updates to the Judge's "Strict Scoring & Deduction Rubric" or "Zero-Tolerance Triggers" to ensure the Poor sample's score drops even further while the Good sample remains at 5.0.
+
+### OUTPUT FORMAT (JSON ONLY)
+{
+  "score_difference": "&SCORE_DIFF&",
+  "vision_gap_analysis": "Side-by-side comparison of visual performance vs. how the Judge scored them.",
+  "judge_vulnerabilities": [
+    "Identify where the Judge was too lenient on the Poor sample.",
+    "Identify where the Judge failed to reward unique strengths of the Good sample."
+  ],
+  "judge_optimization_rules": [
+    "Rule to make a specific deduction more severe (e.g., 'Increase C1 penalty for dividers from -1.5 to -3.0').",
+    "New Zero-Tolerance trigger based on the observed failure.",
+    "Specific 'Mandatory Success' anchor for C5 to reward proper chart omission."
+  ]
+}
