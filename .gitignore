@@ -6,4 +6,11 @@ contrastive-eval-prompt-writer/logs/run_contrastive_v*.log
 contrastive-eval-prompt-writer/logs/meta_prompt_logs.txt
 contrastive-eval-prompt-writer/eval_prompts/archive
 contrastive-eval-prompt-writer/__pycache__
+
 inference-prompt-writer/__pycache__
+inference-prompt-writer/logs/batch_jobs.log
+inference-prompt-writer/logs/eval_logs_*.jsonl
+inference-prompt-writer/logs/meta_prompt_logs.txt
+inference-prompt-writer/logs/iteration_flow.log
+inference-prompt-writer/inputs/tmp_*
+inference-prompt-writer/generated/*
