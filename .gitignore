@@ -1,5 +1,6 @@
 *.ipynb
-todos.md
+.DS_Store
+
 contrastive-eval-prompt-writer/results
 contrastive-eval-prompt-writer/logs/batch_jobs.log
 contrastive-eval-prompt-writer/logs/run_contrastive_v*.log
