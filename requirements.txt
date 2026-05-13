@@ -1,0 +1,3 @@
+google-genai==1.68.0
+google-cloud-storage==3.7.0
+pillow==12.2.0
