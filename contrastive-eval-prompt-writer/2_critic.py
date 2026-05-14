@@ -27,16 +27,35 @@ from google import genai
 from google.genai import types
 from google.cloud import storage
 import sys
+from config import (
+    PROJECT_ID, LOCATION, GCS_BUCKET_NAME, CRITIC_MODEL
+)
 
-# Add parent directory to path to import config
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import config
+# Centralized path configuration using ABSOLUTE paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PATHS = {
+    "logs_dir": os.path.join(BASE_DIR, "logs"),
+    "inputs_dir": os.path.join(BASE_DIR, "inputs"),
+    "eval_prompts_dir": os.path.join(BASE_DIR, "eval_prompts"),
+    "results_dir": os.path.join(BASE_DIR, "results"),
+    "log_file_template": os.path.join(BASE_DIR, "logs", "run_contrastive_{version}.log"),
+    "judge_eval_logs": os.path.join(BASE_DIR, "logs", "judge_eval_logs.jsonl"),
+    "sample_inputs": os.path.join(BASE_DIR, "inputs", "sample_inputs.json"),
+    "critic_template": os.path.join(BASE_DIR, "eval_prompts", "critic_contrastive.txt"),
+    "good_samples_dir": os.path.join(BASE_DIR, "samples", "good"),
+    "poor_samples_dir": os.path.join(BASE_DIR, "samples", "poor"),
+    "batch_jobs_log": os.path.join(BASE_DIR, "logs", "batch_jobs.log"),
+    # Templates for dynamic paths
+    "best_prompt_template": os.path.join(BASE_DIR, "eval_prompts", "{best_version}-judge.txt"),
+    "eval_results_dir_template": os.path.join(BASE_DIR, "results", "evaluate", "{version}"),
+    "input_jsonl_template": os.path.join(BASE_DIR, "inputs", "tmp_batch_input_critic_contrastive_{version}_{timestamp}.jsonl"),
+    "output_local_base_template": os.path.join(BASE_DIR, "results", "critic", "{version}")
+}
 
 def setup_logging(version):
     """Sets up logging to console and a version-specific log file."""
-    base_dir = "."
-    os.makedirs(f"{base_dir}/logs", exist_ok=True)
-    log_file = f"{base_dir}/logs/run_contrastive_{version}.log"
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
+    log_file = PATHS["log_file_template"].format(version=version)
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
@@ -119,8 +138,8 @@ def load_eval_results(eval_dir):
 
 def log_score_results(version, avg_good, avg_poor):
     """Logs the evaluation summary scores to a central JSONL file."""
-    log_file = "logs/judge_eval_logs.jsonl"
-    os.makedirs("logs", exist_ok=True)
+    log_file = PATHS["judge_eval_logs"]
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
     
     log_entry = {
         "version": version,
@@ -136,7 +155,7 @@ def log_score_results(version, avg_good, avg_poor):
 
 def get_best_judge_prompt_info():
     """Reads judge_eval_logs.jsonl and returns the best version and its prompt content."""
-    log_file = "logs/judge_eval_logs.jsonl"
+    log_file = PATHS["judge_eval_logs"]
     if not os.path.exists(log_file):
         return None, 0, ""
 
@@ -170,7 +189,7 @@ def get_best_judge_prompt_info():
     best_score = best_entry["score"]
 
     # Read the actual prompt file
-    best_prompt_path = f"eval_prompts/{best_version}-judge.txt"
+    best_prompt_path = PATHS["best_prompt_template"].format(best_version=best_version)
     if os.path.exists(best_prompt_path):
         with open(best_prompt_path, "r", encoding="utf-8") as f:
             best_prompt_content = f.read()
@@ -201,9 +220,8 @@ def prepare_critic_batch_input(version, eval_results, input_prompts_file, critic
             f"{best_p}\n\n"
         )
 
-    base_dir = "."
-    good_dir = os.path.join(base_dir, "samples", "good")
-    poor_dir = os.path.join(base_dir, "samples", "poor")
+    good_dir = PATHS["good_samples_dir"]
+    poor_dir = PATHS["poor_samples_dir"]
     
     good_scores = []
     poor_scores = []
@@ -301,31 +319,30 @@ def upload_blob(bucket, local_path, destination_blob_name):
     """Uploads a file to GCS."""
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(local_path)
-    logging.info(f"Uploaded {local_path} to gs://{config.GCS_BUCKET_NAME}/{destination_blob_name}")
+    logging.info(f"Uploaded {local_path} to gs://{GCS_BUCKET_NAME}/{destination_blob_name}")
 
 def run_batch_critic(version):
     """Orchestrates the batch critic job submission."""
     # Initialization
-    client = genai.Client(vertexai=True, project=config.PROJECT_ID, location=config.LOCATION)
-    storage_client = storage.Client(project=config.PROJECT_ID)
-    bucket = storage_client.bucket(config.GCS_BUCKET_NAME)
+    client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+    storage_client = storage.Client(project=PROJECT_ID)
+    bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
-    base_dir = "."
-    os.makedirs(f"{base_dir}/inputs", exist_ok=True)
-    os.makedirs(f"{base_dir}/logs", exist_ok=True)
+    os.makedirs(PATHS["inputs_dir"], exist_ok=True)
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
 
     # Configs
-    eval_results_dir = f"{base_dir}/results/evaluate/{version}"
-    input_prompts_file = "inputs/sample_inputs.json"
-    critic_template_file = f"{base_dir}/eval_prompts/critic_contrastive.txt"
+    eval_results_dir = PATHS["eval_results_dir_template"].format(version=version)
+    input_prompts_file = PATHS["sample_inputs"]
+    critic_template_file = PATHS["critic_template"]
     
     eval_results = load_eval_results(eval_results_dir)
     
     timestamp = int(time.time())
-    input_jsonl_name = f"{base_dir}/inputs/tmp_batch_input_critic_contrastive_{version}_{timestamp}.jsonl"
-    gcs_input_uri = f"gs://{config.GCS_BUCKET_NAME}/PhotoWidget/contrastive/{os.path.basename(input_jsonl_name)}"
-    gcs_output_dir = f"gs://{config.GCS_BUCKET_NAME}/PhotoWidget/outputs/critic_contrastive_{version}_{timestamp}/"
-    log_file = f"{base_dir}/logs/batch_jobs.log"
+    input_jsonl_name = PATHS["input_jsonl_template"].format(version=version, timestamp=timestamp)
+    gcs_input_uri = f"gs://{GCS_BUCKET_NAME}/PhotoWidget/contrastive/{os.path.basename(input_jsonl_name)}"
+    gcs_output_dir = f"gs://{GCS_BUCKET_NAME}/PhotoWidget/outputs/critic_contrastive_{version}_{timestamp}/"
+    log_file = PATHS["batch_jobs_log"]
 
     # 1. Prepare local JSONL
     prepare_critic_batch_input(version, eval_results, input_prompts_file, critic_template_file, input_jsonl_name)
@@ -334,9 +351,9 @@ def run_batch_critic(version):
     upload_blob(bucket, input_jsonl_name, f"PhotoWidget/contrastive/{os.path.basename(input_jsonl_name)}")
     
     # 3. Submit Batch Job
-    logging.info(f"Submitting critic batch job for model {config.CRITIC_MODEL}...")
+    logging.info(f"Submitting critic batch job for model {CRITIC_MODEL}...")
     batch_job = client.batches.create(
-        model=config.CRITIC_MODEL,
+        model=CRITIC_MODEL,
         src=gcs_input_uri,
         config=types.CreateBatchJobConfig(
             dest=gcs_output_dir,
@@ -387,7 +404,7 @@ def download_results(storage_client, gcs_uri, local_base):
         uri_path = gcs_uri[5:]
         bucket_name, prefix = uri_path.split("/", 1)
     else:
-        bucket_name = config.GCS_BUCKET_NAME
+        bucket_name = GCS_BUCKET_NAME
         prefix = gcs_uri
 
     bucket = storage_client.bucket(bucket_name)
@@ -413,9 +430,9 @@ if __name__ == "__main__":
 
     log_ver = args.log_version if args.log_version else args.version
     setup_logging(log_ver)
-    client = genai.Client(vertexai=True, project=config.PROJECT_ID, location=config.LOCATION)
-    storage_client = storage.Client(project=config.PROJECT_ID)
-    output_local_base = f"results/critic/{args.version}"
+    client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
+    storage_client = storage.Client(project=PROJECT_ID)
+    output_local_base = PATHS["output_local_base_template"].format(version=args.version)
 
     try:
         job, gcs_output_dir = run_batch_critic(args.version)

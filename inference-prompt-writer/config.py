@@ -23,9 +23,4 @@ EVALUATION_MODEL = "gemini-3.1-pro-preview"
 CRITIC_MODEL = "gemini-3.1-pro-preview"
 OPTIMIZATION_MODEL = "gemini-3.1-pro-preview"
 
-EVAL_PROMPT = "prompts/v7-judge.txt"
-
 GOLDEN_STANDARD_DIR = "../contrastive-eval-prompt-writer/samples/good"
-META_PROMPT = "prompts/optimizer_contrastive.txt"
-CRITIC_PROMPT = "prompts/critic_contrastive.txt"
- 

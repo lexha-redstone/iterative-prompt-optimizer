@@ -22,15 +22,17 @@ import sys
 from google import genai
 from google.genai import types
 
-# Add parent directory to path to import config
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import config
+# Centralized path configuration using ABSOLUTE paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PATHS = {
+    "logs_dir": os.path.join(BASE_DIR, "logs"),
+    "log_file_template": os.path.join(BASE_DIR, "logs", "run_contrastive_{version}.log")
+}
 
 def setup_logging(version):
     """Sets up logging to console and a version-specific log file."""
-    base_dir = "."
-    os.makedirs(f"{base_dir}/logs", exist_ok=True)
-    log_file = f"{base_dir}/logs/run_contrastive_{version}.log"
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
+    log_file = PATHS["log_file_template"].format(version=version)
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
@@ -43,7 +45,7 @@ def setup_logging(version):
 
 def check_score_trend(log_version):
     """Checks if the score difference is increasing by reading the log file."""
-    log_file = f"logs/run_contrastive_{log_version}.log"
+    log_file = PATHS["log_file_template"].format(version=log_version)
     if not os.path.exists(log_file):
         logging.warning(f"Log file {log_file} not found for trend analysis.")
         return

@@ -1,0 +1,29 @@
+You are a master technical voxel architect and strict retro pixel artist. Generate a flawless 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You must manually construct this image natively within a unified pixel grid, rigorously obeying the following structural, spatial, and aesthetic mechanical laws:
+
+1. [STRICT PIXEL MEDIUM & PERFECT ALIASING]
+- Uniform Block Construction: The entire image MUST be constructed natively from a single, uniform scale of coarse, jagged square pixel blocks.
+- 100% Rigid Stair-Stepped Edges: ALL linework, geometry, curves, and boundaries MUST display prominent, rigid, stair-stepped pixel aliasing.
+- NO VECTOR FAKERY: You must build out of raw, jagged blocks. Smooth lines, high-resolution vectors, anti-aliasing, and fuzzy "mixels" are STRICTLY FORBIDDEN.
+
+2. [MATHEMATICAL 1-BIT DITHERING & 3-TONE LIGHTING]
+- Volumetric Lighting: Establish 3D volume on all geometry using strictly 3 tones: Top Faces = Pure White, Right Faces = Pure Black, Left Faces = Dithered Midtone.
+- Structural 1x1 Dithering: You MUST create the left-face midtones EXCLUSIVELY through strict mathematical 1x1 pixel checkerboard dithering (perfectly alternating pure black and pure white square pixel blocks locked to the uniform grid). 
+- NO POST-PROCESSING: Absolutely no digital screentones, global noise overlays, halftone brushes, or soft gradient masks.
+
+3. [MODULAR ISLAND ARCHITECTURE & 3D VOXEL PROPS]
+- Modular Layout: Assign each distinct data point to its own distinct, physically separated 3D isometric platform. Surround each platform with abundant negative space. Zero spaghetti architecture (no interlocking pathways or cluttered overlaps).
+- Enforce Volumetric Isometric Integrity: EVERY visual element, prop, or tool resting on the islands MUST possess true 3D depth, constructed from 3D voxels adhering exactly to the 30-degree isometric projection.
+- BAN ON ORTHOGRAPHIC EMBEDDING: Absolutely NO flat, 2D, front-facing orthographic objects, clip-art, or flat icons may rest upon or intersect with the 3D angled planes.
+
+4. [NATIVE PIXEL TYPOGRAPHY & EXACT TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Flawless Verbatim Transcription: Render exact user-provided text word-for-word. Zero hallucination, zero omissions. 
+- ENFORCE STRICT TYPOGRAPHY MEDIUM: All text MUST be rendered natively as chunky, low-resolution 8-bit retro arcade bitmap fonts. You must draw every single letter manually so it visibly consists of rigid, jagged staircase square blocks matching the global uniform pixel scale. 
+- ABSOLUTELY NO smooth, high-resolution, modern, or anti-aliased vector fonts overlaid on the scene.
+
+5. [2D HUD MARGIN ISOLATION]
+- Margin Anchoring: If text labels, legends, or UI elements function as flat 2D orthographic objects facing the camera, they MUST be placed EXCLUSIVELY in the empty, pure negative space along the outer margins of the canvas.
+- Complete Spatial Decoupling: These 2D HUD elements must completely detach from the 3D geometry and NEVER physically intersect with, hover over, warp to, or cast shadows upon the 3D isometric islands.

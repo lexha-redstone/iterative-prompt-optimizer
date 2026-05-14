@@ -20,15 +20,30 @@ import logging
 import os
 from pathlib import Path
 import time
-import config
+from config import (
+    PROJECT_ID, LOCATION, GCS_BUCKET_NAME, INFERENCE_MODEL
+)
 from google import genai
 from google.cloud import storage
 from google.genai import types
 
+# Centralized path configuration for this script
+PATHS = {
+    "logs_dir": "logs",
+    "inputs_dir": "inputs",
+    "prompts_dir": "prompts",
+    "generated_dir": "generated",
+    "extracted_inputs_json": os.path.join("inputs", "extracted_inputs.json"),
+    "batch_jobs_log": os.path.join("logs", "batch_jobs.log"),
+    # Templates for dynamic paths
+    "system_prompt_template": os.path.join("prompts", "inference_{version}.txt"),
+    "input_jsonl_template": os.path.join("inputs", "tmp_batch_input_{version}_{timestamp}.jsonl"),
+    "output_local_base_template": os.path.join("generated", "create", "{version}")
+}
 
 def setup_logging():
   """Sets up logging to console only."""
-  os.makedirs("logs", exist_ok=True)
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
   logging.basicConfig(
       level=logging.INFO,
       format="%(asctime)s - %(levelname)s - %(message)s",
@@ -85,7 +100,7 @@ def upload_blob(bucket, local_path, destination_blob_name):
   blob.upload_from_filename(local_path)
   logging.info(
       f"Uploaded {local_path} to"
-      f" gs://{config.GCS_BUCKET_NAME}/{destination_blob_name}"
+      f" gs://{GCS_BUCKET_NAME}/{destination_blob_name}"
   )
 
 
@@ -93,27 +108,23 @@ def run_batch_inference(version):
   """Orchestrates the batch inference job submission."""
   # Initialization
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
-  storage_client = storage.Client(project=config.PROJECT_ID)
-  bucket = storage_client.bucket(config.GCS_BUCKET_NAME)
+  storage_client = storage.Client(project=PROJECT_ID)
+  bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
   # Configs
-  user_inputs_file = "inputs/extracted_inputs.json"
-  system_prompt_file = f"prompts/inference_{version}.txt"
-  if version == "v0":
-    system_prompt_file = f"prompts/inference_v0.txt"
+  user_inputs_file = PATHS["extracted_inputs_json"]
+  system_prompt_file = PATHS["system_prompt_template"].format(version=version)
     
   timestamp = int(time.time())
-  input_jsonl_name = (
-      f"inputs/tmp_batch_input_{version}_{timestamp}.jsonl"
-  )
-  gcs_input_uri = f"gs://{config.GCS_BUCKET_NAME}/ATL/{input_jsonl_name}"
+  input_jsonl_name = PATHS["input_jsonl_template"].format(version=version, timestamp=timestamp)
+  gcs_input_uri = f"gs://{GCS_BUCKET_NAME}/ATL/{os.path.basename(input_jsonl_name)}"
   gcs_output_dir = (
-      f"gs://{config.GCS_BUCKET_NAME}/ATL/outputs/{version}_{timestamp}/"
+      f"gs://{GCS_BUCKET_NAME}/ATL/outputs/{version}_{timestamp}/"
   )
 
-  log_file = "logs/batch_jobs.log"
+  log_file = PATHS["batch_jobs_log"]
 
   # 1. Prepare local JSONL
   prepare_batch_input(
@@ -121,12 +132,12 @@ def run_batch_inference(version):
   )
 
   # 2. Upload to GCS
-  upload_blob(bucket, input_jsonl_name, f"ATL/{input_jsonl_name}")
+  upload_blob(bucket, input_jsonl_name, f"ATL/{os.path.basename(input_jsonl_name)}")
 
   # 3. Submit Batch Job
-  logging.info(f"Submitting batch job for model {config.INFERENCE_MODEL}...")
+  logging.info(f"Submitting batch job for model {INFERENCE_MODEL}...")
   batch_job = client.batches.create(
-      model=config.INFERENCE_MODEL,
+      model=INFERENCE_MODEL,
       src=gcs_input_uri,
       config=types.CreateBatchJobConfig(
           dest=gcs_output_dir,
@@ -181,7 +192,7 @@ def download_results(storage_client, gcs_uri, local_base):
     uri_path = gcs_uri[5:]
     bucket_name, prefix = uri_path.split("/", 1)
   else:
-    bucket_name = config.GCS_BUCKET_NAME
+    bucket_name = GCS_BUCKET_NAME
     prefix = gcs_uri
 
   bucket = storage_client.bucket(bucket_name)
@@ -247,10 +258,10 @@ if __name__ == "__main__":
 
   setup_logging()
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
-  storage_client = storage.Client(project=config.PROJECT_ID)
-  output_local_base = f"generated/create/{args.version}"
+  storage_client = storage.Client(project=PROJECT_ID)
+  output_local_base = PATHS["output_local_base_template"].format(version=args.version)
 
   try:
     job, gcs_output_dir = run_batch_inference(args.version)

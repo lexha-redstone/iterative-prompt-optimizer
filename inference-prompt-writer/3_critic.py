@@ -21,15 +21,31 @@ import os
 import random
 from pathlib import Path
 import time
-import config
+from config import (
+    PROJECT_ID, LOCATION, GCS_BUCKET_NAME, CRITIC_MODEL, GOLDEN_STANDARD_DIR
+)
 from google import genai
 from google.cloud import storage
 from google.genai import types
 
+# Centralized path configuration for this script
+PATHS = {
+    "logs_dir": "logs",
+    "inputs_dir": "inputs",
+    "generated_dir": "generated",
+    "critic_prompt": os.path.join("prompts", "critic_contrastive.txt"),
+    "eval_logs_jsonl": os.path.join("logs", "eval_logs.jsonl"),
+    "golden_standard_dir": GOLDEN_STANDARD_DIR,
+    # Templates for dynamic paths
+    "eval_results_template": os.path.join("generated", "evaluate", "{version}", "predictions.jsonl"),
+    "create_results_template": os.path.join("generated", "create", "{version}", "predictions.jsonl"),
+    "critic_output_dir_template": os.path.join("generated", "critic", "{version}"),
+    "input_jsonl_template": os.path.join("inputs", "tmp_batch_input_critic_{version}_{timestamp}.jsonl")
+}
 
 def setup_logging():
   """Sets up logging to console."""
-  os.makedirs("logs", exist_ok=True)
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
   logging.basicConfig(
       level=logging.INFO,
       format="%(asctime)s - %(levelname)s - %(message)s",
@@ -88,6 +104,10 @@ def parse_eval_results(eval_file, create_file):
         create_data[key] = {"user_prompt": user_prompt}
 
   samples = []
+  if not os.path.exists(eval_file):
+      logging.error(f"Evaluation file not found: {eval_file}")
+      return samples
+
   with open(eval_file, "r", encoding="utf-8") as f:
     for line in f:
       if not line.strip():
@@ -261,8 +281,8 @@ def print_and_log_score_summary_v2(samples, version, eval_log=None):
       "cap_reasons": cap_reasons[:10],
       "is_v2": True,
   }
-  os.makedirs("logs", exist_ok=True)
-  with open("logs/eval_logs.jsonl", "a", encoding="utf-8") as f:
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
+  with open(PATHS["eval_logs_jsonl"], "a", encoding="utf-8") as f:
     f.write(json.dumps(log_entry) + "\n")
 
   if eval_log:
@@ -290,10 +310,10 @@ def run_critic_batch(version, eval_log=None):
   setup_logging()
   logging.info(f"Starting contrastive critic (Golden Standard) for version: {version}.")
 
-  eval_file = f"generated/evaluate/{version}/predictions.jsonl"
-  create_file = f"generated/create/{version}/predictions.jsonl"
-  critic_prompt_file = config.CRITIC_PROMPT
-  output_local_base = f"generated/critic/{version}"
+  eval_file = PATHS["eval_results_template"].format(version=version)
+  create_file = PATHS["create_results_template"].format(version=version)
+  critic_prompt_file = PATHS["critic_prompt"]
+  output_local_base = PATHS["critic_output_dir_template"].format(version=version)
   os.makedirs(output_local_base, exist_ok=True)
 
   if not os.path.exists(critic_prompt_file):
@@ -314,10 +334,10 @@ def run_critic_batch(version, eval_log=None):
   top_samples, _ = get_contrastive_samples(samples, top_num=1, bottom_num=0)
   fallback_b64 = top_samples[0]["image_b64"] if top_samples else None
 
-  golden_dir = config.GOLDEN_STANDARD_DIR
+  golden_dir = PATHS["golden_standard_dir"]
   critic_template = read_file(critic_prompt_file)
   timestamp = int(time.time())
-  input_jsonl_name = f"inputs/tmp_batch_input_critic_{version}_{timestamp}.jsonl"
+  input_jsonl_name = PATHS["input_jsonl_template"].format(version=version, timestamp=timestamp)
 
   with open(input_jsonl_name, "w", encoding="utf-8") as f:
     for s in bottom_samples:
@@ -395,19 +415,19 @@ def run_critic_batch(version, eval_log=None):
       f.write(json.dumps(request_obj) + "\n")
 
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
-  storage_client = storage.Client(project=config.PROJECT_ID)
-  bucket = storage_client.bucket(config.GCS_BUCKET_NAME)
+  storage_client = storage.Client(project=PROJECT_ID)
+  bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
-  gcs_input_uri = f"gs://{config.GCS_BUCKET_NAME}/ATL/{input_jsonl_name}"
-  upload_blob(bucket, input_jsonl_name, f"ATL/{input_jsonl_name}")
+  gcs_input_uri = f"gs://{GCS_BUCKET_NAME}/ATL/{os.path.basename(input_jsonl_name)}"
+  upload_blob(bucket, input_jsonl_name, f"ATL/{os.path.basename(input_jsonl_name)}")
 
-  gcs_output_dir = f"gs://{config.GCS_BUCKET_NAME}/ATL/outputs/critic_{version}_{timestamp}/"
+  gcs_output_dir = f"gs://{GCS_BUCKET_NAME}/ATL/outputs/critic_{version}_{timestamp}/"
 
   logging.info(f"Starting batch job for critic...")
   job = client.batches.create(
-      model=config.CRITIC_MODEL,
+      model=CRITIC_MODEL,
       src=gcs_input_uri,
       config=types.CreateBatchJobConfig(
           dest=gcs_output_dir,

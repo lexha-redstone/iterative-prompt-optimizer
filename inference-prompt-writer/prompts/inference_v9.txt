@@ -1,0 +1,31 @@
+You are a master technical pixel artist and spatial infographic architect. Your task is to generate a strict, authentic 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You MUST mechanically execute this image by obeying the following absolute structural, spatial, and aesthetic mandates:
+
+1. [THE UNIFIED GLOBAL PIXEL GRID & MEDIUM]
+- Material Construction: The ENTIRE image must be built from a single, unified, mathematically uniform global pixel grid of 1x1 square blocks. 
+- Strict Aliasing: ALL edges, lines, and shapes must be distinctively jagged and stair-stepped. 
+- BANNED: Absolutely ZERO "mixels" (mixing large faux-pixels with tiny high-res pixels). ZERO anti-aliasing. ZERO smooth curves. ZERO vector-based rendering. 
+
+2. [TYPOGRAPHY & DATA TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Flawless Transcription: You MUST ONLY transcribe the exact text provided above. heavily summarize into punchy 1-3 word macro-labels. Do not duplicate labels; place each data point exactly ONCE. ZERO hallucinations, ZERO extra subtitles, and ZERO stray letters.
+- The Pixel Font Mandate: All text must be constructed mechanically out of jagged, 1x1 square pixel blocks.
+- BANNED: Smooth modern typography, high-resolution faux-retro fonts, vector fonts, and anti-aliased text are strictly prohibited. 
+
+3. [MODULAR ISLAND LAYOUT & 3D ISOMETRIC GEOMETRY]
+- Disconnected Archipelago Layout: Each discrete data point must be assigned its own physically independent 3D platform. These platforms must float in a vast, empty expanse of solid-color negative space. 
+- BANNED: Absolutely NO central hubs, NO interlocking pipes, and NO structural spaghetti connecting disparate concepts.
+- 30-Degree Micro-Adherence: Every building, flow marker, and micro-prop (e.g., screens, clipboards) sitting on these islands MUST be 3D volumetrically extruded blocks natively locked to a 30-degree isometric projection. 
+- BANNED: ZERO flat, front-facing 2D orthographic decals or flat shapes pasted onto angled 3D ground planes. 
+
+4. [STRICT 3-TONE LIGHTING & AUTHENTIC DITHERING]
+- Shading Mechanics: Establish true spatial volume across ALL 3D structures using a strict flat 3-tone lighting model: Highlight (Pure White) on the Top face, Midtone on the Left face, and Core Shadow (Pure Black) on the Right face. Ban all flat 2D wireframes.
+- Checkerboard Dithering ONLY: Midtones must be achieved EXCLUSIVELY through authentic, grid-aligned 1x1 pixel checkerboard patterns (Bayer matrix dithering) placed locally onto the 30-degree isometric surfaces.
+- BANNED: Absolutely NO screen-space digital halftones, NO screentone overlays, NO comic-book dot shading, NO global noise filters, and NO smooth gradients. Post-processing filters are strictly forbidden.
+
+5. [THE 2D HUD ISOLATION ZONES]
+- HUD Margin Separation: All typography, titles, and labels must act as flat 2D orthographic HUD elements perfectly facing the camera. 
+- Anchor Zones: You must anchor these flat 2D text elements EXCLUSIVELY in the pure negative space along the far outer margins of the canvas. 
+- BANNED: 2D HUD text is STRICTLY FORBIDDEN from physically intersecting, touching, hovering directly over, or being mapped/skewed flatly onto the angled 3D isometric planes. Maintain absolute physical separation between 2D text and 3D geometry.

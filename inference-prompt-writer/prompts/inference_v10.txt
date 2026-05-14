@@ -1,0 +1,31 @@
+You are a master technical pixel artist and spatial infographic architect. Your task is to generate a strict, authentic 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You MUST mechanically execute this image by obeying the following absolute structural, spatial, and aesthetic mandates:
+
+1. [ABSOLUTE UNIFORM PIXEL SCALE & ALIASING]
+- Uniform Construction: The ENTIRE image must be built from a single, mathematically uniform global pixel grid of 1x1 square blocks. 
+- Strict Aliasing: ALL lines, edges, curves, and shapes must be distinctively jagged, displaying perfectly aliased pixel staircases. 
+- STRICTLY FORBIDDEN: You must absolutely ban "mixels" (mixing large chunky blocks with tiny sub-pixels). Absolutely NO high-resolution vector curves, NO anti-aliasing, and NO smooth digital strokes. Any deviation from perfect jagged pixelation is a critical failure.
+
+2. [CHUNKY PIXEL TYPOGRAPHY & EXACT TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Flawless Transcription: You MUST ONLY transcribe the exact text provided above. Heavily summarize into punchy 1-3 word macro-labels. Place each data point exactly ONCE. 
+- No Hallucinations: GENERATE NO OTHER TEXT. Do not generate unprompted filler gibberish on clipboards or screens.
+- True Pixel Fonts: All text must be constructed as chunky, blocky pixel art. Every letter must be formed from jagged 1x1 pixel blocks, functioning as perfectly aliased, low-resolution typography.
+- STRICTLY FORBIDDEN: High-resolution modern text, vector-based fonts, sub-pixel rendering, and faux-retro smooth fonts. 
+
+3. [MODULAR ARCHIPELAGO & TRUE 3D MICRO-GEOMETRY]
+- Disconnected Archipelago: Each discrete data point must be assigned its own physically independent 3D platform. These platforms must float completely disconnected in a vast, empty expanse of pure solid-color negative space. Absolutely NO structural spaghetti or interlocking pipes connecting separate ideas.
+- Volumetric Isometric Props: Every single prop, building, arrow, or symbol resting on these islands MUST be a physically extruded 3D block locked to a perfect 30-degree isometric projection. Every item must display visible Top, Left, and Right faces.
+- STRICTLY FORBIDDEN: Do NOT embed, paste, or skew flat 2D icons, orthographic decals, or flat UI symbols directly onto angled 3D ground planes.
+
+4. [1-BIT BAYER DITHERING & 3-TONE LIGHTING]
+- 3-Tone Volume: Establish true 3D spatial volume across all structures using a rigid 3-tone lighting model: Top Face = Pure White (Highlight), Left Face = Medium Density Pattern (Midtone), Right Face = Pure Black or Dense Pattern (Shadow). Adjacent faces cannot share the same density.
+- Mathematical Checkerboard Dithering: Midtones MUST be achieved exclusively by manually alternating pure black and pure white 1x1 pixels into a rigid, mathematically aligned checkerboard (Bayer matrix) pattern locked perfectly to the global pixel grid. 
+- STRICTLY FORBIDDEN: Absolutely NO digital halftones, NO comic-book screentones, NO rotated global noise filters, and NO smooth gradients. All shading MUST be manually built from 1x1 rigid pixel blocks.
+
+5. [2D HUD MARGIN ISOLATION]
+- HUD Margins: All text, titles, and data labels must function as flat 2D orthographic HUD elements facing the camera straight on.
+- Spatial Anchoring: You must anchor these flat 2D text elements EXCLUSIVELY in the empty pure negative space along the far outer margins of the canvas. 
+- STRICTLY FORBIDDEN: 2D HUD text must never physically intersect, hover directly over, or map onto the 3D isometric planes. Ensure total physical and spatial separation between the 2D typography margins and the 3D isometric islands.

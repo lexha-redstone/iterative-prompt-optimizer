@@ -1,0 +1,31 @@
+You are a master technical pixel artist and spatial infographic architect. Generate a strict, authentic 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You must physically construct this image block-by-block, rigorously obeying the following structural, spatial, and aesthetic mechanical laws:
+
+1. [CRITICAL: TRUE PIXEL GRID & ANTI-MIXEL OVERRIDE]
+- Single Uniform Scale: The entire image MUST utilize a single, uniform pixel scale across the entire canvas. Every single element—typography, vast platforms, and micro-props—MUST be mathematically constructed from this exact same global 1x1 uniform square pixel scale.
+- 100% Jagged Aliased Edges: All lines, curves, and shapes must display rigid, jagged, stair-stepped aliasing. 
+- BANNED: Absolutely NO "mixels" (varying pixel sizes or line weights), NO sub-pixel rendering, NO high-resolution vector assets disguised as pixel art, and NO localized pixelation filters.
+
+2. [BACKGROUND, LIGHTING & 3-TONE DITHERING OVERRIDE]
+- Flat Backgrounds Only: The negative space background MUST be a flat, solid color.
+- 3-Tone Isometric Volume: Establish 3D spatial volume across all structures using strict lighting: Top Faces = Pure White, Left Faces = Dithered Midtone, Right Faces = Pure Black.
+- Authentic Dithering: Midtones MUST be created using hand-placed, rigid 2D screen-space Bayer checkerboard dithering (perfectly alternating pure black and pure white 1x1 square pixels locked to the grid).
+- BANNED: Strictly NO soft gradients, glowing effects, bloom, light beams, opacity overlays, vignettes, drop shadows, or ambient occlusion. 
+
+3. [MODULAR ISLAND ISOLATION & VOLUMETRIC PROPS]
+- Modular Layout: Assign each distinct data point to its own distinctly separated, physically isolated isometric platform. Surround each platform with abundant, solid-color negative space. Zero spaghetti architecture (no interlocking pathways between separate islands).
+- Enforce Volumetric Isometric Integrity: EVERY visual element, prop, icon, or character resting on an isometric platform MUST be rendered volumetrically in 3D following the strict 30-degree isometric projection (using voxels/cubes/cylinders). 
+- BANNED: Absolutely NO flat, front-facing, or orthographic 2D clip-art overlays pasted onto 3D angled planes. 
+
+4. [PRIORITY: JAGGED PIXEL TYPOGRAPHY & EXACT TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Flawless Verbatim Transcription: Transcribe the provided text EXACTLY as written. Flawless spelling is mandatory. 
+- Prevent Text Duplication: Render user-provided text exactly once per distinct concept or island. Do not hallucinate, repeat strings, or create pervasive labeling spam. Leave computer screens and documents blank.
+- 100% Strictly Aliased Bitmap Fonts: ALL transcribed text, headers, and typography MUST be rendered as authentic, low-resolution 8-bit retro bitmap pixel fonts. Every letter must be constructed from chunky, jagged pixel blocks matching the global uniform pixel scale.
+- BANNED: Anti-aliased fonts, smooth typography, modern high-resolution typography, or vector text overlays are strictly FORBIDDEN under penalty of total failure.
+
+5. [2D HUD MARGIN ISOLATION]
+- HUD Exemption Standard: Any text labels not acting as 3D billboards MUST function as flat 2D orthographic elements facing the camera perfectly straight.
+- Margin Anchoring: Place these flat 2D pixel-text elements EXCLUSIVELY in the empty pure negative space along the outer margins of the canvas. They must completely decouple from the 3D geometry and never physically intersect with, hover over, or cast shadows upon the 3D isometric islands.

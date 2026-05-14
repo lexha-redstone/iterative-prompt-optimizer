@@ -7,10 +7,21 @@ import re
 import sys
 import glob
 
+# Centralized path configuration using ABSOLUTE paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PATHS = {
+    "logs_dir": os.path.join(BASE_DIR, "logs"),
+    "inputs_dir": os.path.join(BASE_DIR, "inputs"),
+    "eval_prompts_dir": os.path.join(BASE_DIR, "eval_prompts"),
+    "log_file_template": os.path.join(BASE_DIR, "logs", "run_contrastive_{version}.log"),
+    "v0_judge": os.path.join(BASE_DIR, "eval_prompts", "v0-judge.txt"),
+    "next_judge_template": os.path.join(BASE_DIR, "eval_prompts", "{next_version}-judge.txt"),
+    "tmp_files_pattern": os.path.join(BASE_DIR, "inputs", "tmp_*")
+}
+
 def setup_logging(version):
-    log_dir = "logs"
-    os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, f"run_contrastive_{version}.log")
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
+    log_file = PATHS["log_file_template"].format(version=version)
     
     logging.basicConfig(
         level=logging.INFO,
@@ -21,10 +32,10 @@ def setup_logging(version):
         ]
     )
 
-def run_command(command):
-    logging.info(f"Running command: {' '.join(command)}")
+def run_command(command, cwd=None):
+    logging.info(f"Running command: {' '.join(command)} in {cwd or 'current dir'}")
     # Use capture_output=True to get stdout and stderr
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, cwd=cwd)
     
     # Print sub-process output to console
     if result.stdout:
@@ -46,9 +57,9 @@ def get_next_version(v_string):
         return f"v{version_num + 1}"
     return v_string + "_next"
 
-def cleanup_temp_files(directory="inputs"):
-    logging.info(f"Cleaning up temporary files in {directory}...")
-    files = glob.glob(os.path.join(directory, "tmp_*"))
+def cleanup_temp_files():
+    logging.info(f"Cleaning up temporary files in {PATHS['inputs_dir']}...")
+    files = glob.glob(PATHS["tmp_files_pattern"])
     for f in files:
         try:
             os.remove(f)
@@ -63,6 +74,10 @@ def main():
     parser.add_argument("--start_step", type=int, default=1, help="Step to start from in the first iteration (0, 1, 2, or 3)")
     
     args = parser.parse_args()
+    
+    # Use script directory as the base for all subprocess calls
+    script_dir = BASE_DIR
+    
     setup_logging(args.version)
     
     current_version = args.version
@@ -70,12 +85,12 @@ def main():
     # Step 0: Initiation (Only run once at the very beginning)
     if current_version == "v0" and args.start_step <= 0:
         logging.info("--- Step 0: Initiation (Generating Initial Prompts) ---")
-        run_command(["python", "0_initiate.py"])
+        run_command(["python", "0_initiate.py"], cwd=script_dir)
     elif current_version == "v0" and args.start_step == 1:
         # Check if prompts exist, if not, initiate anyway to be safe
-        if not os.path.exists("eval_prompts/v0-judge.txt"):
-            logging.info("--- Step 0: Initiation (Auto-running because v0-judge.txt is missing) ---")
-            run_command(["python", "0_initiate.py"])
+        if not os.path.exists(PATHS["v0_judge"]):
+            logging.info(f"--- Step 0: Initiation (Auto-running because {PATHS['v0_judge']} is missing) ---")
+            run_command(["python", "0_initiate.py"], cwd=script_dir)
 
     for i in range(args.num_iterations):
         logging.info(f"\n{'='*20} ITERATION {i+1} (Version: {current_version}) {'='*20}")
@@ -89,7 +104,7 @@ def main():
                 "python", "1_batch_evaluate.py",
                 "--version", current_version,
                 "--log_version", args.version
-            ])
+            ], cwd=script_dir)
         
         # Step 2: Critic
         if i == 0 and args.start_step > 2:
@@ -100,7 +115,7 @@ def main():
                 "python", "2_critic.py",
                 "--version", current_version,
                 "--log_version", args.version
-            ])
+            ], cwd=script_dir)
             
             # Extract and log average scores
             for line in critic_output.splitlines():
@@ -115,7 +130,7 @@ def main():
             "python", "3_optimize.py",
             "--version", current_version,
             "--log_version", args.version
-        ])
+        ], cwd=script_dir)
 
         # Step 4: Check Status and Align Prompts
         next_version = get_next_version(current_version)
@@ -125,16 +140,13 @@ def main():
             "--version", current_version,
             "--new_version", next_version,
             "--log_version", args.version
-        ])
+        ], cwd=script_dir)
         
         # Cleanup temporary input files after the iteration
         cleanup_temp_files()
         
-        # Update version for next iteration
-        # next_version = get_next_version(current_version) # already calculated above
-        
         # Check if the next version's prompt file was actually created
-        next_prompt_path = f"eval_prompts/{next_version}-judge.txt"
+        next_prompt_path = PATHS["next_judge_template"].format(next_version=next_version)
         if i < args.num_iterations - 1:
             if os.path.exists(next_prompt_path):
                 logging.info(f"Moving to next iteration with {next_version}")

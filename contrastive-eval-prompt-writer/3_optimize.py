@@ -22,16 +22,29 @@ import re
 import sys
 from google import genai
 from google.genai import types
+from config import (
+    PROJECT_ID, LOCATION, OPTIMIZATION_MODEL
+)
 
-# Add parent directory to path to import config
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import config
+# Centralized path configuration using ABSOLUTE paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PATHS = {
+    "logs_dir": os.path.join(BASE_DIR, "logs"),
+    "eval_prompts_dir": os.path.join(BASE_DIR, "eval_prompts"),
+    "results_dir": os.path.join(BASE_DIR, "results"),
+    "log_file_template": os.path.join(BASE_DIR, "logs", "run_contrastive_{version}.log"),
+    "meta_prompt_logs": os.path.join(BASE_DIR, "logs", "meta_prompt_logs.txt"),
+    "optimizer_template": os.path.join(BASE_DIR, "eval_prompts", "optimizer_contrastive.txt"),
+    # Templates for dynamic paths
+    "critic_results_dir_template": os.path.join(BASE_DIR, "results", "critic", "{version}"),
+    "current_eval_prompt_template": os.path.join(BASE_DIR, "eval_prompts", "{version}-judge.txt"),
+    "output_path_template": os.path.join(BASE_DIR, "eval_prompts", "{next_version}-judge.txt")
+}
 
 def setup_logging(version):
     """Sets up logging to console and a version-specific log file."""
-    base_dir = "."
-    os.makedirs(f"{base_dir}/logs", exist_ok=True)
-    log_file = f"{base_dir}/logs/run_contrastive_{version}.log"
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
+    log_file = PATHS["log_file_template"].format(version=version)
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
@@ -109,13 +122,12 @@ def gather_critic_results(critic_dir):
 def optimize_eval_prompt(version, log_version=None):
     """Main function to run the evaluation prompt optimization."""
     setup_logging(log_version if log_version else version)
-    client = genai.Client(vertexai=True, project=config.PROJECT_ID, location=config.LOCATION)
+    client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
     
-    base_dir = "."
-    critic_results_dir = f"{base_dir}/results/critic/{version}"
+    critic_results_dir = PATHS["critic_results_dir_template"].format(version=version)
     
-    meta_prompt_template = read_file(f"{base_dir}/eval_prompts/optimizer_contrastive.txt")
-    current_eval_prompt_path = f"{base_dir}/eval_prompts/{version}-judge.txt"
+    meta_prompt_template = read_file(PATHS["optimizer_template"])
+    current_eval_prompt_path = PATHS["current_eval_prompt_template"].format(version=version)
     current_eval_prompt = read_file(current_eval_prompt_path)
     
     critic_results_text, stats = gather_critic_results(critic_results_dir)
@@ -147,9 +159,8 @@ If the current difference is low, you must make the criteria more punitive for "
     )
 
     # Log the final meta prompt for debugging
-    log_dir = "logs"
-    os.makedirs(log_dir, exist_ok=True)
-    log_file_path = os.path.join(log_dir, "meta_prompt_logs.txt")
+    os.makedirs(PATHS["logs_dir"], exist_ok=True)
+    log_file_path = PATHS["meta_prompt_logs"]
     with open(log_file_path, "a", encoding="utf-8") as f:
         f.write(
             f"\n{'='*50}\nVERSION: {version}\n{'='*50}\n\n{final_meta_prompt}\n\n"
@@ -157,7 +168,7 @@ If the current difference is low, you must make the criteria more punitive for "
 
     logging.info(f"Calling Gemini API for evaluation prompt optimization...")
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=final_meta_prompt
     )
     
@@ -175,7 +186,7 @@ If the current difference is low, you must make the criteria more punitive for "
     v_num = int(match.group(1)) if match else 0
     next_version = f"v{v_num + 1}"
     
-    output_path = f"{base_dir}/eval_prompts/{next_version}-judge.txt"
+    output_path = PATHS["output_path_template"].format(next_version=next_version)
     
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(new_prompt_text)

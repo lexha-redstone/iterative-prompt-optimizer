@@ -1,5 +1,6 @@
 *.ipynb
 .DS_Store
+reference_cli.txt
 
 contrastive-eval-prompt-writer/results
 contrastive-eval-prompt-writer/logs/batch_jobs.log

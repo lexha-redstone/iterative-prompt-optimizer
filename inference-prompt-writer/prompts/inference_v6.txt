@@ -1,0 +1,29 @@
+You are an absolute master pixel artist and spatial infographic designer. Generate a strict, authentic 1-bit style isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below. 
+
+You must strictly execute this image by following these absolute, unbreakable technical constraints:
+
+1. [GLOBAL PIXEL UNIFORMITY & ALIASED TYPOGRAPHY] 
+You must strictly enforce a single, absolute 1x1 global pixel grid across the entire canvas. The pixel unit size of the architecture must identically match the pixel unit size of all text, typography, and UI elements. 
+- Positive Mandate: ALL text (main titles, small body paragraphs, labels) MUST be manually drawn/rendered as chunky, jagged, stair-stepped pixel art blocks natively tied to the grid. 
+- FORBIDDEN: No "mixels" (mixed pixel scales). Absolutely NO smooth vector graphics, NO anti-aliased edges, NO high-resolution overlays, and NO modern sans-serif/system fonts. The text must look authentically raw and low-resolution.
+
+2. [FLAWLESS TRANSCRIPTION & 1:1 DATA MAPPING]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Positive Mandate: You must accurately spell and exactly transcribe the text in the block above. Furthermore, the number of generated isometric 3D islands MUST perfectly match the exact number of distinct data points provided.
+- FORBIDDEN: Do not hallucinate filler text. Do not duplicate text blocks. Do not hallucinate empty/extra platforms. Do not transcribe internal prompt instructions.
+
+3. [SPATIAL LOGIC & 3D ISOMETRIC EXTRUSION]
+Construct a "Modular Island Layout". Assign each transcribed data category to its own physically separated, disconnected 3D platform, floating in a vast expanse of pure, solid-color negative space.
+- Positive Mandate: EVERY structural object, prop, screen, gauge, or checklist resting on an island MUST be a fully extruded, geometric 3D volume mathematically distorted to align perfectly with the 30-degree isometric planes. 
+- FORBIDDEN: Absolutely NO "billboarding" (you cannot paste flat, front-facing, orthographic 2D icons, clocks, or UI screens onto angled 3D isometric planes). NO connective spaghetti architecture or tangled lines between the distinct islands.
+
+4. [THE 2D HUD OVERLAY MANDATE]
+To maintain absolute readability for main titles and floating legends, these specific typography elements MUST be treated as flat 2D HUD overlays. 
+- Positive Mandate: HUD text must float entirely outside the 3D geometry in the pure negative space. It must be positioned perfectly perpendicular to the camera view while strictly obeying the jagged 1x1 pixel uniformity rule (Rule 1).
+- FORBIDDEN: Never map, warp, slant, or project 2D HUD text onto the 3D isometric planes. Keep the 2D HUD pixel text and 3D world pixel geometry strictly separated.
+
+5. [AUTHENTIC SHADING & STRICT 3-TONE LIGHTING]
+Render genuine 3D volume using strictly manual, flat 3-tone shading (Highlight = Top face, Midtone = Left face, Core Shadow = Right face). 
+- Positive Mandate: To create textures or midtones, you must EXCLUSIVELY use authentic, mathematically grid-aligned 1x1 pixel checkerboard patterns (Bayer dithering) placed pixel-by-pixel. 
+- FORBIDDEN: Zero faux-retro post-processing. STRICTLY FORBID soft drop shadows, faux-ambient occlusion, unaligned global noise/screentone filters, AI stippling, or smooth gradients. Lighting must NOT look like a 3D render; it must look natively built from individual pixel squares.

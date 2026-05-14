@@ -21,15 +21,29 @@ import logging
 import os
 from pathlib import Path
 import time
-import config
+from config import (
+    PROJECT_ID, LOCATION, GCS_BUCKET_NAME, EVALUATION_MODEL
+)
 from google import genai
 from google.cloud import storage
 from google.genai import types
 
+# Centralized path configuration for this script
+PATHS = {
+    "logs_dir": "logs",
+    "inputs_dir": "inputs",
+    "generated_dir": "generated",
+    "eval_prompt": os.path.join("prompts", "v7-judge.txt"),
+    "batch_jobs_log": os.path.join("logs", "batch_jobs.log"),
+    # Templates for dynamic paths
+    "input_predictions_template": os.path.join("generated", "create", "{version}", "predictions.jsonl"),
+    "input_jsonl_template": os.path.join("inputs", "tmp_batch_input_eval_{version}_{timestamp}.jsonl"),
+    "output_local_base_template": os.path.join("generated", "evaluate", "{version}")
+}
 
 def setup_logging():
   """Sets up logging to console."""
-  os.makedirs("logs", exist_ok=True)
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
   logging.basicConfig(
       level=logging.INFO,
       format="%(asctime)s - %(levelname)s - %(message)s",
@@ -133,7 +147,7 @@ def upload_blob(bucket, local_path, destination_blob_name):
   blob.upload_from_filename(local_path)
   logging.info(
       f"Uploaded {local_path} to"
-      f" gs://{config.GCS_BUCKET_NAME}/{destination_blob_name}"
+      f" gs://{GCS_BUCKET_NAME}/{destination_blob_name}"
   )
 
 
@@ -141,23 +155,19 @@ def run_batch_evaluation(version):
   """Orchestrates the batch evaluation job submission."""
   # Initialization
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
-  storage_client = storage.Client(project=config.PROJECT_ID)
-  bucket = storage_client.bucket(config.GCS_BUCKET_NAME)
+  storage_client = storage.Client(project=PROJECT_ID)
+  bucket = storage_client.bucket(GCS_BUCKET_NAME)
 
   # Configs
-  input_predictions_file = (
-      f"generated/create/{version}/predictions.jsonl"
-  )
-  eval_prompt_template_file = config.EVAL_PROMPT
+  input_predictions_file = PATHS["input_predictions_template"].format(version=version)
+  eval_prompt_template_file = PATHS["eval_prompt"]
   timestamp = int(time.time())
-  input_jsonl_name = (
-      f"inputs/tmp_batch_input_eval_{version}_{timestamp}.jsonl"
-  )
-  gcs_input_uri = f"gs://{config.GCS_BUCKET_NAME}/ATL/{input_jsonl_name}"
-  gcs_output_dir = f"gs://{config.GCS_BUCKET_NAME}/ATL/outputs/eval_{version}_{timestamp}/"
-  log_file = "logs/batch_jobs.log"
+  input_jsonl_name = PATHS["input_jsonl_template"].format(version=version, timestamp=timestamp)
+  gcs_input_uri = f"gs://{GCS_BUCKET_NAME}/ATL/{os.path.basename(input_jsonl_name)}"
+  gcs_output_dir = f"gs://{GCS_BUCKET_NAME}/ATL/outputs/eval_{version}_{timestamp}/"
+  log_file = PATHS["batch_jobs_log"]
 
   # 1. Prepare local JSONL
   prepare_eval_batch_input(
@@ -168,14 +178,14 @@ def run_batch_evaluation(version):
   )
 
   # 2. Upload to GCS
-  upload_blob(bucket, input_jsonl_name, f"ATL/{input_jsonl_name}")
+  upload_blob(bucket, input_jsonl_name, f"ATL/{os.path.basename(input_jsonl_name)}")
 
   # 3. Submit Batch Job
   logging.info(
-      f"Submitting evaluation batch job for model {config.EVALUATION_MODEL}..."
+      f"Submitting evaluation batch job for model {EVALUATION_MODEL}..."
   )
   batch_job = client.batches.create(
-      model=config.EVALUATION_MODEL,
+      model=EVALUATION_MODEL,
       src=gcs_input_uri,
       config=types.CreateBatchJobConfig(
           dest=gcs_output_dir, display_name=f"Eval_{version}_{timestamp}"
@@ -229,7 +239,7 @@ def download_results(storage_client, gcs_uri, local_base):
     uri_path = gcs_uri[5:]
     bucket_name, prefix = uri_path.split("/", 1)
   else:
-    bucket_name = config.GCS_BUCKET_NAME
+    bucket_name = GCS_BUCKET_NAME
     prefix = gcs_uri
 
   bucket = storage_client.bucket(bucket_name)
@@ -255,10 +265,10 @@ if __name__ == "__main__":
 
   setup_logging()
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
-  storage_client = storage.Client(project=config.PROJECT_ID)
-  output_local_base = f"generated/evaluate/{args.version}"
+  storage_client = storage.Client(project=PROJECT_ID)
+  output_local_base = PATHS["output_local_base_template"].format(version=args.version)
 
   try:
     job, gcs_output_dir = run_batch_evaluation(args.version)

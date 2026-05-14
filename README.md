@@ -74,5 +74,20 @@ The **Inference Prompt Writer** is designed to refine **Inference Prompts** once
 
 ## Getting Started
 
-- Use the **Contrastive Eval Prompt Writer** first to establish a high-quality judge prompt.
-- Once you have a reliable judge, use the **Inference Prompt Writer** to iteratively improve your production prompt's performance against that judge.
+This repository is designed to be used with **Gemini CLI**. It includes specialized Skills to guide you through the optimization process.
+
+### 1. Skill Setup
+After cloning the repository, enable the built-in optimization skills:
+```bash
+/skills reload
+```
+This will activate:
+- `contrastive-judge-optimizer`: For building evaluation prompts.
+- `inference-prompt-optimizer`: For refining production inference prompts.
+
+### 2. Usage Instructions
+The provided directories (`contrastive-eval-prompt-writer/` and `inference-prompt-writer/`) are **example use cases** with reference code.
+- **To use for your own task**: Use Gemini CLI to copy and adapt these examples. For example, ask the agent: *"I want to optimize a prompt for [Your Task]. Help me set up a new folder by copying the structure from the examples and updating the inputs."*
+- The agent will use the installed Skills to ensure your new implementation follows the core guardrails (e.g., scoring integrity and prompt alignment).
+- Use the **Contrastive Eval Prompt Writer** example first to establish a high-quality judge prompt.
+- Once you have a reliable judge, use the **Inference Prompt Writer** example to iteratively improve your production prompt's performance against that judge.

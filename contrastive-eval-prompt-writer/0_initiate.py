@@ -19,7 +19,22 @@ import logging
 import re
 from google import genai
 from google.genai import types
-import config
+from config import PROJECT_ID, LOCATION, OPTIMIZATION_MODEL
+
+# Centralized path configuration using ABSOLUTE paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PATHS = {
+    "ref_judge": os.path.join(BASE_DIR, "eval_prompts", "reference/v0-judge.txt"),
+    "target_v0_judge": os.path.join(BASE_DIR, "eval_prompts", "v0-judge.txt"),
+    "ref_critic": os.path.join(BASE_DIR, "eval_prompts", "reference/critic_reference.txt"),
+    "target_critic": os.path.join(BASE_DIR, "eval_prompts", "critic_contrastive.txt"),
+    "ref_optimizer": os.path.join(BASE_DIR, "eval_prompts", "reference/optimizer_reference.txt"),
+    "target_optimizer": os.path.join(BASE_DIR, "eval_prompts", "optimizer_contrastive.txt"),
+    "sample_inputs": os.path.join(BASE_DIR, "inputs", "sample_inputs.json"),
+    "reference_dir": os.path.join(BASE_DIR, "eval_prompts", "reference"),
+    "samples_good_v0": os.path.join(BASE_DIR, "samples/good/img-0.png"),
+    "samples_poor_v0": os.path.join(BASE_DIR, "samples/poor/img-0.png")
+}
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -44,15 +59,19 @@ def strip_markdown(text):
         return match.group(1).strip()
     return text.strip()
 
-client = genai.Client(vertexai=True, project=config.PROJECT_ID, location=config.LOCATION)
+client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
 def generate_v0_judge():
     logging.info("Generating v0-judge.txt...")
-    ref_judge = read_file("eval_prompts/reference/v0-judge.txt")
-    good_img_b64 = encode_image("samples/good/img-0.png")
-    poor_img_b64 = encode_image("samples/poor/img-0.png")
+    if not os.path.exists(PATHS["ref_judge"]):
+        logging.error(f"Reference judge prompt not found at {PATHS['ref_judge']}")
+        return
+
+    ref_judge = read_file(PATHS["ref_judge"])
+    good_img_b64 = encode_image(PATHS["samples_good_v0"])
+    poor_img_b64 = encode_image(PATHS["samples_poor_v0"])
     
-    with open("inputs/sample_inputs.json", "r") as f:
+    with open(PATHS["sample_inputs"], "r") as f:
         sample_inputs = json.load(f)
     user_input = sample_inputs.get("img-0.png", "")
 
@@ -85,7 +104,7 @@ Output ONLY the complete prompt text for `v0-judge.txt`. Do not include any conv
 """
     
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=[
             types.Content(
                 role="user",
@@ -99,12 +118,16 @@ Output ONLY the complete prompt text for `v0-judge.txt`. Do not include any conv
     )
     
     content = strip_markdown(response.text)
-    write_file("eval_prompts/v0-judge.txt", content)
+    write_file(PATHS["target_v0_judge"], content)
     logging.info("v0-judge.txt created.")
 
 def generate_critic():
     logging.info("Generating critic_contrastive.txt...")
-    ref_critic = read_file("eval_prompts/reference/critic_reference.txt")
+    if not os.path.exists(PATHS["ref_critic"]):
+        logging.error(f"Reference critic prompt not found at {PATHS['ref_critic']}")
+        return
+
+    ref_critic = read_file(PATHS["ref_critic"])
     
     meta_prompt = f"""
 You are an expert Prompt Engineer. Your task is to update a CRITIC PROMPT for "Isometric Pixel Art Infographics".
@@ -123,17 +146,21 @@ Output ONLY the complete prompt text for `critic_contrastive.txt`. Do not includ
 """
     
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=meta_prompt
     )
     
     content = strip_markdown(response.text)
-    write_file("eval_prompts/critic_contrastive.txt", content)
+    write_file(PATHS["target_critic"], content)
     logging.info("critic_contrastive.txt created.")
 
 def generate_optimizer():
     logging.info("Generating optimizer_contrastive.txt...")
-    ref_optimizer = read_file("eval_prompts/reference/optimizer_reference.txt")
+    if not os.path.exists(PATHS["ref_optimizer"]):
+        logging.error(f"Reference optimizer prompt not found at {PATHS['ref_optimizer']}")
+        return
+
+    ref_optimizer = read_file(PATHS["ref_optimizer"])
     
     meta_prompt = f"""
 You are an expert Prompt Engineer. Your task is to update an OPTIMIZER PROMPT for "Isometric Pixel Art Infographics".
@@ -152,19 +179,22 @@ Output ONLY the complete prompt text for `optimizer_contrastive.txt`. Do not inc
 """
     
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=meta_prompt
     )
     
     content = strip_markdown(response.text)
-    write_file("eval_prompts/optimizer_contrastive.txt", content)
+    write_file(PATHS["target_optimizer"], content)
     logging.info("optimizer_contrastive.txt created.")
 
-if __name__ == "__main__":
+def main():
     # Ensure we are in the right directory
-    if not os.path.exists("eval_prompts/reference"):
-        logging.error("Could not find 'eval_prompts/reference'. Please run this script from the 'contrastive-eval-prompt-writer' directory.")
+    if not os.path.exists(PATHS["reference_dir"]):
+        logging.error(f"Could not find '{PATHS['reference_dir']}'. Please run this script from the 'contrastive-eval-prompt-writer' directory.")
     else:
         generate_v0_judge()
         generate_critic()
         generate_optimizer()
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,29 @@
+You are an expert pixel artist and infographic designer. Generate a strict, authentic 1-bit style isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below. 
+
+Follow these absolute, unbreakable technical constraints:
+
+1. [GLOBAL PIXEL UNIFORMITY & ALIASED TYPOGRAPHY] 
+You must strictly enforce a single, absolute 1x1 global pixel grid across the entire canvas. The pixel unit size of the architecture must identically match the pixel unit size of all text and UI elements. 
+- All text (titles, headers, labels) MUST be built as jagged, stair-stepped, blocky, perfectly aliased pixel clusters. 
+- FORBIDDEN: Do not use "mixels" (mixed pixel scales). Absolutely no smooth vector graphics, no anti-aliased edges, and no modern system fonts. Everything must look authentically low-resolution and raw.
+
+2. [FLAWLESS TRANSCRIPTION & TEXT FIREWALL]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- You must exactly transcribe the text in the block above. Transcription must be 1:1, verbatim, and flawlessly spelled. 
+- FIREWALL: Do not hallucinate filler text. Do not transcribe any internal prompt instructions (e.g., do not write the words "isometric", "dithering", or "highlight" in the image). 
+
+3. [MODULAR 3D ISLANDS & PROJECTION RULES]
+Construct a "Modular Island Layout". Assign each distinct data category to its own physically separated, disconnected 30-degree isometric 3D platform. Isolate all islands with vast expanses of pure, solid-color negative space.
+- 3D WORLD EXTRUSION: Every structural object, prop, screen, or display resting on an island MUST be a fully extruded, geometric 3D volume mathematically aligned to the 30-degree isometric grid. 
+- FORBIDDEN: Absolutely no "billboarding" (pasting flat, front-facing 2D orthographic sprites, clocks, or screens onto angled 3D isometric planes). No connective spaghetti lines between islands.
+
+4. [THE 2D HUD OVERLAY MANDATE]
+To maintain absolute readability, ALL typography (main titles, paragraphs, data labels) MUST be treated as flat 2D HUD overlays. 
+- Text must float entirely in the negative space, positioned perfectly perpendicular and parallel to the camera view. 
+- FORBIDDEN: Never map, warp, slant, or project text onto the 3D isometric planes. 2D HUD text must remain strictly separate from 3D world geometry while still flawlessly obeying the 1x1 pixel uniformity rule (Rule 1).
+
+5. [AUTHENTIC SHADING & 3-TONE LIGHTING]
+Render genuine 3D volume using strictly flat 3-tone shading (Highlight = Top face, Midtone = Left face, Core Shadow = Right face). 
+- To create textures or midtones, you must exclusively use authentic, mathematically grid-aligned 1x1 pixel checkerboard patterns (Bayer dithering). 
+- FORBIDDEN: Absolutely no AI stippling, smooth gradients, vector halftones, digital screentones (round dots), or unaligned global noise filters. Shading must be constructed pixel-by-pixel.

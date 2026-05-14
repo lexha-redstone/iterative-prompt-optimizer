@@ -18,7 +18,19 @@ import argparse
 import re
 from google import genai
 from google.genai import types
-import config
+from config import PROJECT_ID, LOCATION, OPTIMIZATION_MODEL, GOLDEN_STANDARD_DIR
+
+# Centralized path configuration for this script
+PATHS = {
+    "prompts_dir": "prompts",
+    "eval_prompt": os.path.join("prompts", "v7-judge.txt"),
+    "inference_v0": os.path.join("prompts", "inference_v0.txt"),
+    "ref_critic": os.path.join("prompts", "reference/critic_reference.txt"),
+    "target_critic": os.path.join("prompts", "critic_contrastive.txt"),
+    "ref_optimizer": os.path.join("prompts", "reference/optimizer_reference.txt"),
+    "target_optimizer": os.path.join("prompts", "optimizer_contrastive.txt"),
+    "golden_standard_dir": GOLDEN_STANDARD_DIR
+}
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -49,27 +61,23 @@ def fix_placeholders(text):
     text = text.replace("[USER_INPUT]", "&USER_INPUT&")
     return text
 
-client = genai.Client(vertexai=True, project=config.PROJECT_ID, location=config.LOCATION)
+client = genai.Client(vertexai=True, project=PROJECT_ID, location=LOCATION)
 
 def generate_inference_v0():
     logging.info(f"Generating inference_v0.txt...")
     
-    # Get judge path from config.py
-    judge_path = getattr(config, 'EVAL_PROMPT', "prompts/v7-judge.txt")
-    if not os.path.exists(judge_path):
-        logging.warning(f"Judge path missing: {judge_path}. Falling back to default v7-judge.")
-        judge_path = "prompts/v7-judge.txt"
-    
-    current_judge = read_file(judge_path)
+    current_judge = read_file(PATHS["eval_prompt"])
+    if not current_judge:
+        logging.error(f"Required judge prompt missing at {PATHS['eval_prompt']}. Aborting.")
+        return
     
     # Get 1-2 images from GOLDEN_STANDARD_DIR
-    golden_dir = config.GOLDEN_STANDARD_DIR
     image_parts = []
-    if os.path.exists(golden_dir):
+    if os.path.exists(PATHS["golden_standard_dir"]):
         try:
-            images = [f for f in os.listdir(golden_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+            images = [f for f in os.listdir(PATHS["golden_standard_dir"]) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
             for img_name in images[:2]:
-                img_path = os.path.join(golden_dir, img_name)
+                img_path = os.path.join(PATHS["golden_standard_dir"], img_name)
                 with open(img_path, "rb") as f:
                     img_data = f.read()
                 mime_type = "image/png" if img_name.lower().endswith('.png') else "image/jpeg"
@@ -78,7 +86,7 @@ def generate_inference_v0():
         except Exception as e:
             logging.warning(f"Error reading golden standard images: {e}")
     else:
-        logging.warning(f"Golden standard directory not found: {golden_dir}")
+        logging.warning(f"Golden standard directory not found: {PATHS['golden_standard_dir']}")
 
     meta_prompt = f"""
 You are an expert Prompt Engineer for Image Generation models.
@@ -104,27 +112,19 @@ Output ONLY the complete prompt text. Do not include any conversational filler o
 """
 
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=[meta_prompt] + image_parts
     )
     
     content = fix_placeholders(strip_markdown(response.text))
     
-    target_path = f"prompts/inference_v0.txt"
-    write_file(target_path, content)
-    logging.info(f"{target_path} created.")
+    write_file(PATHS["inference_v0"], content)
+    logging.info(f"{PATHS['inference_v0']} created.")
 
 def generate_critic():
-    logging.info(f"Generating critic.txt...")
-    ref_critic = read_file("prompts/reference/critic_reference.txt")
-    
-    # Get judge path from config.py
-    judge_path = getattr(config, 'EVAL_PROMPT', "prompts/v7-judge.txt")
-    if not os.path.exists(judge_path):
-        logging.warning(f"Judge path missing: {judge_path}. Falling back to default v7-judge.")
-        judge_path = "prompts/v7-judge.txt"
-    
-    current_judge = read_file(judge_path)
+    logging.info(f"Generating critic prompt...")
+    ref_critic = read_file(PATHS["ref_critic"])
+    current_judge = read_file(PATHS["eval_prompt"])
     
     if not ref_critic or not current_judge:
         logging.error(f"Missing necessary reference or current judge prompt. Cannot generate critic.")
@@ -137,11 +137,11 @@ The critic prompt's job is to analyze why a "Generated Image" failed compared to
 ### REFERENCE CRITIC PROMPT
 {ref_critic}
 
-### CURRENT EVALUATION PROMPT (Judge Prompt - {os.path.basename(judge_path)})
+### CURRENT EVALUATION PROMPT (Judge Prompt - {os.path.basename(PATHS["eval_prompt"])})
 {current_judge}
 
 ### YOUR OBJECTIVE
-Generate a new `critic.txt` prompt tailored for the "Infographics" task.
+Generate a new critic prompt tailored for the "Infographics" task.
 1. **Update Core Constraints**: Replace the "CORE CONSTRAINTS" section in the reference with the specific visual rules and art direction found in the Current Evaluation prompt. Focus on the strict grid, flatness, color codes, and typography rules (e.g., League Gothic, All-Caps headers, flush-left).
 2. **Incorporate Judge's Ruthlessness**: Notice if the Judge uses "Ruthless Bifurcated Scoring" or "AUTO 0.0" triggers. The Critic must be equally analytical and offensive in identifying these exact failure patterns.
 3. **Vision Gap Analysis**: Explicitly instruct the Critic to compare the "TARGET" image against the "GOLDEN STANDARD" image. It must identify the "Vision Gap"—the specific aesthetic or structural distance between the failure and perfection.
@@ -171,30 +171,19 @@ Output ONLY the complete prompt text. Do not include any conversational filler o
 """
     
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=meta_prompt
     )
     
     content = fix_placeholders(strip_markdown(response.text))
     
-    # Save as the base critic file
-    target_path = getattr(config, 'CRITIC_PROMPT', "prompts/critic.txt")
-    if isinstance(target_path, dict):
-        target_path = "prompts/critic.txt"
-    write_file(target_path, content)
-    logging.info(f"{target_path} created using judge {judge_path}.")
+    write_file(PATHS["target_critic"], content)
+    logging.info(f"{PATHS['target_critic']} created using judge {PATHS['eval_prompt']}.")
 
 def generate_optimizer():
-    logging.info(f"Generating meta_prompt.txt...")
-    ref_optimizer = read_file("prompts/reference/optimizer_reference.txt")
-    
-    # Get judge path from config.py
-    judge_path = getattr(config, 'EVAL_PROMPT', "prompts/v7-judge.txt")
-    if not os.path.exists(judge_path):
-        logging.warning(f"Judge path missing: {judge_path}. Falling back to default v7-judge.")
-        judge_path = "prompts/v7-judge.txt"
-        
-    current_judge = read_file(judge_path)
+    logging.info(f"Generating optimizer prompt...")
+    ref_optimizer = read_file(PATHS["ref_optimizer"])
+    current_judge = read_file(PATHS["eval_prompt"])
     
     if not ref_optimizer or not current_judge:
         logging.error(f"Missing necessary reference or current judge prompt. Cannot generate optimizer.")
@@ -207,11 +196,11 @@ The optimizer prompt's job is to take the critic's feedback and refine the infer
 ### REFERENCE OPTIMIZER PROMPT
 {ref_optimizer}
 
-### CURRENT EVALUATION PROMPT (Judge Prompt - {os.path.basename(judge_path)})
+### CURRENT EVALUATION PROMPT (Judge Prompt - {os.path.basename(PATHS["eval_prompt"])})
 {current_judge}
 
 ### YOUR OBJECTIVE
-Generate a new `meta_prompt.txt` prompt tailored for the "Infographics" task.
+Generate a new optimizer prompt tailored for the "Infographics" task.
 1. **Update Context**: Adjust the instructions to reflect the specific visual constraints and "Bifurcated Scoring" logic of the current Judge.
 2. **Maintain the Structure**: Keep the sections: Visual Error Pattern Analysis, Hypotheses for Improvement, and Optimized Prompt Proposal.
 3. **Refine Guidance**: Ensure the optimizer knows how to balance negative and positive constraints for this specific style, especially to avoid "AUTO 0.0" triggers.
@@ -221,18 +210,14 @@ Output ONLY the complete prompt text. Do not include any conversational filler o
 """
     
     response = client.models.generate_content(
-        model=config.OPTIMIZATION_MODEL,
+        model=OPTIMIZATION_MODEL,
         contents=meta_prompt
     )
     
     content = fix_placeholders(strip_markdown(response.text))
     
-    # Save as the base meta_prompt file
-    target_path = getattr(config, 'META_PROMPT', "prompts/meta_prompt.txt")
-    if isinstance(target_path, dict):
-        target_path = "prompts/meta_prompt.txt"
-    write_file(target_path, content)
-    logging.info(f"{target_path} created using judge {judge_path}.")
+    write_file(PATHS["target_optimizer"], content)
+    logging.info(f"{PATHS['target_optimizer']} created using judge {PATHS['eval_prompt']}.")
 
 if __name__ == "__main__":
     generate_inference_v0()

@@ -23,4 +23,3 @@ INFERENCE_MODEL = "gemini-3.1-flash-image-preview"
 EVALUATION_MODEL = "gemini-3.1-pro-preview"
 CRITIC_MODEL = "gemini-3.1-pro-preview"
 OPTIMIZATION_MODEL = "gemini-3.1-pro-preview"
- 

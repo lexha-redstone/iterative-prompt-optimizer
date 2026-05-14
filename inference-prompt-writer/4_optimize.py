@@ -18,10 +18,23 @@ import json
 import logging
 import os
 import re
-import config
+from config import PROJECT_ID, LOCATION, OPTIMIZATION_MODEL
 from google import genai
 from google.genai import types
 
+# Centralized path configuration for this script
+PATHS = {
+    "logs_dir": "logs",
+    "prompts_dir": "prompts",
+    "generated_dir": "generated",
+    "eval_logs_jsonl": os.path.join("logs", "eval_logs.jsonl"),
+    "meta_prompt_template": os.path.join("prompts", "optimizer_contrastive.txt"),
+    "meta_prompt_logs": os.path.join("logs", "meta_prompt_logs.txt"),
+    # Templates for dynamic paths
+    "current_prompt_template": os.path.join("prompts", "inference_{version}.txt"),
+    "critic_results_template": os.path.join("generated", "critic", "{version}", "predictions.jsonl"),
+    "output_path_template": os.path.join("prompts", "inference_{next_version}.txt")
+}
 
 def setup_logging():
   """Sets up logging to console."""
@@ -53,7 +66,7 @@ def calculate_score_summary_v2(version, eval_log=None):
   log_file = (
       eval_log
       if eval_log and os.path.exists(eval_log)
-      else "logs/eval_logs.jsonl"
+      else PATHS["eval_logs_jsonl"]
   )
   if not os.path.exists(log_file):
     logging.warning(f"Log file not found: {log_file}")
@@ -169,7 +182,7 @@ def get_best_prompt_info(eval_log=None):
   log_file = (
       eval_log
       if eval_log and os.path.exists(eval_log)
-      else "logs/eval_logs.jsonl"
+      else PATHS["eval_logs_jsonl"]
   )
   if not os.path.exists(log_file):
     logging.warning(f"Log file not found for best prompt info: {log_file}")
@@ -200,7 +213,7 @@ def get_best_prompt_info(eval_log=None):
     return None, 0, "", ""
 
   if not history:
-    return None, 0, "", ""
+    return None, 0, ""
 
   # Sort by score to find the best version
   sorted_history = sorted(history, key=lambda x: x["score"], reverse=True)
@@ -210,7 +223,7 @@ def get_best_prompt_info(eval_log=None):
   best_score = best_entry["score"]
 
   # Read the actual prompt file and its score summary
-  best_prompt_path = f"prompts/inference_{best_version}.txt"
+  best_prompt_path = PATHS["current_prompt_template"].format(version=best_version)
   best_prompt_content = read_file(best_prompt_path)
   best_score_summary = calculate_score_summary_v2(
       best_version, eval_log=eval_log
@@ -256,7 +269,7 @@ Output in a clear, structured Markdown format.
       f"Comparing {best_version} vs {current_version} for regression check..."
   )
   response = client.models.generate_content(
-      model=config.OPTIMIZATION_MODEL, contents=prompt
+      model=OPTIMIZATION_MODEL, contents=prompt
   )
   return response.text
 
@@ -284,7 +297,7 @@ DO NOT optimize the prompt yet. ONLY format and structure the data.
       "Normalizing and formatting optimization context using Gemini..."
   )
   response = client.models.generate_content(
-      model=config.OPTIMIZATION_MODEL, contents=prompt
+      model=OPTIMIZATION_MODEL, contents=prompt
   )
   return response.text
 
@@ -293,12 +306,12 @@ def optimize_prompt(version, eval_log=None):
   """Main function to run the optimization loop."""
   setup_logging()
   client = genai.Client(
-      vertexai=True, project=config.PROJECT_ID, location=config.LOCATION
+      vertexai=True, project=PROJECT_ID, location=LOCATION
   )
 
-  current_prompt_path = f"prompts/inference_{version}.txt"
-  critic_results_path = f"generated/critic/{version}/predictions.jsonl"
-  meta_prompt_path = config.META_PROMPT
+  current_prompt_path = PATHS["current_prompt_template"].format(version=version)
+  critic_results_path = PATHS["critic_results_template"].format(version=version)
+  meta_prompt_path = PATHS["meta_prompt_template"]
 
   logging.info(f"Gathering data for version: {version}")
   current_prompt = read_file(current_prompt_path)
@@ -314,9 +327,11 @@ def optimize_prompt(version, eval_log=None):
   critic_results = gather_critic_results(critic_results_path)
 
   # 1. Trajectory & Best Prompt Analysis
-  best_v, best_s, best_p, best_sum = get_best_prompt_info(
-      eval_log=eval_log
-  )
+  best_info = get_best_prompt_info(eval_log=eval_log)
+  if best_info and best_info[0]:
+      best_v, best_s, best_p, best_sum = best_info
+  else:
+      best_v, best_s, best_p, best_sum = None, 0, "", ""
 
   # Extract current score as float for comparison
   current_score = 0
@@ -364,9 +379,8 @@ def optimize_prompt(version, eval_log=None):
   )
 
   # Log the final meta prompt for debugging
-  log_dir = "logs"
-  os.makedirs(log_dir, exist_ok=True)
-  log_file_path = os.path.join(log_dir, "meta_prompt_logs.txt")
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
+  log_file_path = PATHS["meta_prompt_logs"]
   with open(log_file_path, "a", encoding="utf-8") as f:
     f.write(
         f"\n{'='*50}\nVERSION: {version}\n{'='*50}\n\n{final_meta_prompt}\n\n"
@@ -374,7 +388,7 @@ def optimize_prompt(version, eval_log=None):
 
   logging.info(f"Calling Gemini API for final prompt optimization...")
   response = client.models.generate_content(
-      model=config.OPTIMIZATION_MODEL, contents=final_meta_prompt
+      model=OPTIMIZATION_MODEL, contents=final_meta_prompt
   )
 
   optimized_content = response.text
@@ -387,12 +401,10 @@ def optimize_prompt(version, eval_log=None):
     new_prompt_text = prompt_match.group(1).strip()
   else:
     # Fallback if no code block is found
-    lines = optimized_content.splitlines()
-    # Find where the prompt starts (heuristically after a header or if it looks like a prompt)
     new_prompt_text = optimized_content.strip()
 
   next_version = get_next_version(version)
-  output_path = f"prompts/inference_{next_version}.txt"
+  output_path = PATHS["output_path_template"].format(next_version=next_version)
 
   with open(output_path, "w", encoding="utf-8") as f:
     f.write(new_prompt_text)

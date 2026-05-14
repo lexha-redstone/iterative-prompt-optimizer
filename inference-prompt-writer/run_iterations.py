@@ -25,15 +25,23 @@ import re
 import subprocess
 import sys
 
+# Centralized path configuration for this script
+PATHS = {
+    "logs_dir": "logs",
+    "inputs_dir": "inputs",
+    "iteration_flow_log": os.path.join("logs", "iteration_flow.log"),
+    "eval_logs_template": os.path.join("logs", "eval_logs_{timestamp}.jsonl"),
+    "tmp_files_pattern": os.path.join("inputs", "tmp_*")
+}
 
 def setup_logging():
   """Sets up logging for the orchestrator."""
-  os.makedirs("logs", exist_ok=True)
+  os.makedirs(PATHS["logs_dir"], exist_ok=True)
   logging.basicConfig(
       level=logging.INFO,
       format="%(asctime)s - [ORCHESTRATOR] - %(levelname)s - %(message)s",
       handlers=[
-          logging.FileHandler("logs/iteration_flow.log"),
+          logging.FileHandler(PATHS["iteration_flow_log"]),
           logging.StreamHandler(sys.stdout),
       ],
   )
@@ -49,9 +57,14 @@ def get_next_version(current_version):
 
 
 def run_script(script_name, args_list):
-  """Runs a python script as a subprocess and waits for completion."""
-  cmd = [sys.executable, script_name] + args_list
-  logging.info(f"Running: {' '.join(cmd)}")
+  """Runs a python script as a subprocess and waits for completion.
+  Ensures the script is run in the directory where it resides.
+  """
+  script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), script_name))
+  script_dir = os.path.dirname(script_path)
+  
+  cmd = [sys.executable, script_path] + args_list
+  logging.info(f"Running: {' '.join(cmd)} in {script_dir}")
 
   process = subprocess.Popen(
       cmd,
@@ -60,6 +73,7 @@ def run_script(script_name, args_list):
       text=True,
       bufsize=1,
       universal_newlines=True,
+      cwd=script_dir # Ensure working directory is the script's directory
   )
 
   for line in process.stdout:
@@ -77,9 +91,12 @@ def run_script(script_name, args_list):
 
 def cleanup_temp_files():
   """Removes temporary input files from the inputs directory."""
-  temp_files = glob.glob("inputs/tmp_*")
+  # Adjust pattern to be absolute for safety
+  base_dir = os.path.dirname(os.path.abspath(__file__))
+  pattern = os.path.join(base_dir, PATHS["tmp_files_pattern"])
+  temp_files = glob.glob(pattern)
   if temp_files:
-    logging.info(f"Cleaning up {len(temp_files)} temporary files in inputs/")
+    logging.info(f"Cleaning up {len(temp_files)} temporary files...")
     for f in temp_files:
       try:
         os.remove(f)
@@ -115,13 +132,17 @@ def main():
   )
 
   args = parser.parse_args()
+  
+  # Change working directory to the script's directory to ensure relative paths in setup_logging match
+  os.chdir(os.path.dirname(os.path.abspath(__file__)))
+  
   setup_logging()
 
   # Generate session-specific eval log path
   from datetime import datetime
 
   timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-  session_eval_log = f"logs/eval_logs_{timestamp}.jsonl"
+  session_eval_log = os.path.abspath(PATHS["eval_logs_template"].format(timestamp=timestamp))
   logging.info(f"Session evaluation log will be saved to: {session_eval_log}")
 
   current_version = args.start_version

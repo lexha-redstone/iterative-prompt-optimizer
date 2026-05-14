@@ -1,0 +1,29 @@
+You are a master technical voxel architect and retro pixel artist. Generate a strict, authentic 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You must physically construct this image block-by-block, rigorously obeying the following structural, spatial, and aesthetic mechanical laws.
+
+1. [CRITICAL: COARSE ALIASED PIXEL BLOCKS ONLY]
+- Uniform Jagged Construction: The entire image MUST be constructed from a single, uniform scale of coarse, visually jagged square pixel blocks.
+- 100% Rigid Stair-Stepped Edges: All lines, curves, and angles MUST display prominent, rigid, stair-stepped aliasing.
+- NO POST-PROCESSING: You are strictly FORBIDDEN from using high-resolution vector assets, smooth anti-aliased lines, digital screentones, halftones, or global noise filters. You must build out of raw, jagged blocks, not apply a pixelation filter over a smooth image. No "mixels" (pixels of varying sizes).
+
+2. [TRUE VOXEL LIGHTING & CHECKERBOARD DITHERING]
+- Flat Negative Space: The background MUST be a vast, solid, flat color.
+- 3-Tone Volumetric Lighting: Establish 3D volume using strictly 3 tones: Top Faces = Pure White, Left Faces = Dithered Midtone, Right Faces = Pure Black.
+- Authentic Checkerboard Dithering: Midtones MUST be created using strict 1x1 checkerboard dithering (perfectly alternating pure black and pure white square pixel blocks locked to the grid). Absolutely NO soft gradients, vector halftones, or random noise patterns.
+
+3. [MODULAR ISLANDS & 100% 3D VOXEL PROPS]
+- Modular Layout: Assign each distinct data point to its own distinctly separated, physically isolated isometric platform. Surround each platform with abundant negative space. Zero spaghetti architecture (no interlocking pathways).
+- Enforce Volumetric Isometric Integrity: EVERY visual element, prop, tool, or character resting on the islands MUST possess true 3D depth and volume, constructed from 3D voxels/cubes adhering exactly to the 30-degree isometric projection.
+- NO BILLBOARDING: Absolutely NO flat, 2D, front-facing orthographic illustrations, clip-art, or flat icons may be pasted onto, or intersect with, the 3D angled planes. 
+
+4. [PRIORITY: JAGGED 8-BIT BITMAP FONTS & EXACT TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Flawless Verbatim Transcription: Transcribe the provided text EXACTLY as written. Render exact user-provided text only once per distinct concept or island.
+- 100% Strictly Aliased Bitmap Fonts: ALL transcribed text and typography MUST be rendered as chunky, low-resolution 8-bit retro arcade bitmap fonts. Every single letter must visibly consist of rigid, jagged staircase square blocks matching the global uniform scale. NO modern, smooth, or anti-aliased vector fonts.
+- Zero Hallucination: Do not hallucinate filler text. Any books, calendars, computer screens, or documents acting as props MUST be left blank or filled with abstract, solid horizontal pixel lines.
+
+5. [2D HUD MARGIN ISOLATION]
+- HUD Exemption Standard: Text labels that are not physically constructed out of 3D voxels MUST function as flat, 2D orthographic UI elements facing the camera straight on.
+- Margin Anchoring: Place these flat 2D pixel-text legends EXCLUSIVELY in the empty, pure negative space along the outer margins of the canvas. They must completely decouple from the 3D geometry and NEVER physically intersect with, hover over, warp to, or cast shadows upon the 3D isometric islands.

@@ -1,0 +1,25 @@
+You are an absolute master pixel artist and spatial infographic designer. Generate a strict, authentic 1-bit style (black and white) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You must meticulously execute this image by obeying the following structural, spatial, and aesthetic mandates:
+
+1. [TYPOGRAPHY & DATA ABSTRACTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Summarization Mandate: To preserve the low-resolution pixel aesthetic, heavily summarize the data above into punchy, concise 1-3 word macro-labels for each data point. 
+- Pixel Font Mandate: ALL text, titles, and labels MUST be rendered natively as jagged, blocky, stair-stepped pixel art. You must use a strictly aliased, uniform 1x1 pixel font. 
+- Avoidance: Never use smooth, anti-aliased, or vector-based fonts. Do not generate orphaned text, and do not duplicate labels. Transcribe each summarized label exactly once.
+
+2. [MODULAR ISLAND LAYOUT & 3D VOLUMETRICS]
+Construct a modular isometric layout where each data point is assigned its own physically separated, independent 3D platform. These islands must float in a vast, empty expanse of pure, solid-color negative space.
+- Volumetric Mandate: Every object, prop, and platform inside the isometric grid must be built from solid, extruded 3D isometric blocks natively locked to a 30-degree projection. 
+- Avoidance: Do not use skewed, tilted, or warped flat 2D planes (such as flat signs tilted backwards) to mimic 3D. Do not connect the islands with lines or tangled spaghetti architecture.
+
+3. [STRICT 3-TONE LIGHTING & TEXTURE]
+Establish true spatial volume by enforcing a strict flat 3-tone lighting model across all isometric blocks: Highlight on the Top face, Midtone on the Left face, and Core Shadow on the Right face. Ensure no two adjacent faces merge into flat line-art.
+- Dithering Mandate: To create midtones and shadows, exclusively use authentic, grid-aligned 1x1 pixel checkerboard patterns (Bayer dithering) placed pixel-by-pixel. 
+- Avoidance: Absolutely no global noise filters, angled halftone dot patterns, screentones, soft drop shadows, or smooth gradients. 
+
+4. [THE 2D HUD ISOLATION RULE]
+To maintain absolute readability, all typography (labels, titles, legends) must be treated as flat 2D HUD overlays.
+- Spatial Isolation Mandate: You must position all flat 2D HUD text in the pure negative space along the outer margins of the image. The text must perfectly face the camera (orthographic) while obeying the jagged pixel font rule.
+- Avoidance: 2D HUD elements must never physically intersect, hover directly over, or be mapped onto the angled 3D isometric planes. Maintain absolute physical separation between the 2D text layer and the 3D isometric islands.

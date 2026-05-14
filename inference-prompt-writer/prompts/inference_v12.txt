@@ -1,0 +1,29 @@
+You are a master technical pixel artist and spatial infographic architect. Generate a strict, authentic 1-bit monochrome (PURE BLACK AND PURE WHITE ONLY) isometric pixel art infographic visually representing the data provided in the DATA_TO_TRANSCRIBE block below.
+
+You must physically construct this image block-by-block, rigorously obeying the following structural, spatial, and aesthetic mechanical laws:
+
+1. [TRUE PIXEL GRID & STRICT ALIASING OVERRIDE]
+- Absolute Uniform Scale: Every single element—including typography, massive buildings, and tiny micro-props—MUST be mathematically constructed from the exact same global 1x1 uniform square pixel scale.
+- 100% Jagged Edges: All lines, curves, and shapes must display rigid, jagged, stair-stepped aliasing. Edges must be mathematically crisp.
+- BANNED: No mixels (mixed pixel sizes). Sub-pixel rendering, smooth gradients, and anti-aliasing are entirely banned.
+
+2. [SCREEN-SPACE DITHERING & 3-TONE LIGHTING OVERRIDE]
+- 3-Tone Isometric Volume: Establish 3D spatial volume across all structures using strict lighting: Top Faces = Pure White, Left Faces = Dithered Midtone, Right Faces = Pure Black.
+- Authentic Structural Dithering: Midtones MUST be created using hand-placed, rigid 2D screen-space Bayer checkerboard dithering (perfectly alternating pure black and pure white 1x1 square pixels locked to the grid).
+- BANNED: Halftone screentones, global noise filters, unaligned dot patterns, digital post-processing pixelation effects, and faux-shading gradients are strictly prohibited. The dither pattern must never wrap or stretch onto the 3D perspective.
+
+3. [MODULAR PLATFORM ISOLATION & 3D MICRO-PROPS]
+- Absolute Platform Isolation: Assign each distinct data point to its own distinct, physically isolated isometric island. Each island must be surrounded by vast, solid-color negative space.
+- Zero Spaghetti Architecture: Strictly FORBID interconnecting pathways, bridges, paths, or interlocking staircases between these independent modular islands.
+- Mandatory 3D Prop Volume: ALL props, icons, characters, and environmental details (e.g., clouds, locks, shields, computers) MUST be constructed as fully 3D volumetric voxel blocks adhering to the 30-degree isometric perspective. Absolutely NO flat 2D line-art, icons, or orthographic graphics plastered onto angled 3D planes.
+
+4. [JAGGED PIXEL TYPOGRAPHY & EXACT TRANSCRIPTION]
+DATA_TO_TRANSCRIBE:
+"&USER_INPUT&"
+- Strict Pixel Typography (Anti-Aliasing Ban): Transcribe the data exactly. ALL text, headers, and typography MUST be rendered as authentic, low-resolution 8-bit retro bitmap fonts. Every letter must be visibly constructed from the same chunky 1x1 pixel blocks used for the geometry.
+- BANNED: Smooth vector fonts, modern high-resolution typography, standard system fonts, or vector text with a "pixel filter" applied are completely forbidden. 
+- Blank Surfaces: Transcribe ONLY the requested text. Leave all computer screens, documents, and servers completely blank. Generate no gibberish.
+
+5. [2D HUD MARGIN ISOLATION]
+- HUD Exemption Standard: All transcribed text labels must function as flat 2D orthographic elements facing the camera perfectly straight.
+- Margin Anchoring: Place these flat 2D pixel-text elements EXCLUSIVELY in the empty pure negative space along the outer margins of the canvas. They must completely decouple from the 3D geometry and never physically intersect with, hover over, or cast shadows upon the 3D isometric islands.
